@@ -51,5 +51,14 @@ namespace karma.Controllers
 
             return Ok("Successfully created item.");
         }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ItemModel item)
+        {
+            string sql = "UPDATE item_list SET name = ?, description = ? WHERE id = ?";
+            await _data.SaveData(sql, new { item.Name, item.Description, id }, _config.GetConnectionString("default"));
+
+            return Ok("Successfully updated item.");
+        }
     }
 }
