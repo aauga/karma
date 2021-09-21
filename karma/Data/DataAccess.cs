@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 
 namespace karma.Data
 {
-    public class DataAccess
+    public class DataAccess : IDataAccess
     {
         public async Task<List<T>> LoadData<T, TU>(string sql, TU parameters, string connectionString)
         {
