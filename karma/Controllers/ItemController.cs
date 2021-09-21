@@ -28,5 +28,19 @@ namespace karma.Controllers
 
             return Ok(items);
         }
+        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            string sql = "SELECT * FROM item_list WHERE id = ?";
+            List<ItemModel> item = await _data.LoadData<ItemModel, dynamic>(sql, new { id }, _config.GetConnectionString("default"));
+
+            if (item.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(item[0]);
+        }
     }
 }
