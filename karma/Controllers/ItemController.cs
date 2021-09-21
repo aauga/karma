@@ -42,5 +42,14 @@ namespace karma.Controllers
             
             return Ok(item[0]);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] ItemModel item)
+        {
+            string sql = "INSERT INTO item_list (name, description) VALUES (?, ?)";
+            await _data.SaveData(sql, new { item.Name, item.Description }, _config.GetConnectionString("default"));
+
+            return Ok("Successfully created item.");
+        }
     }
 }
