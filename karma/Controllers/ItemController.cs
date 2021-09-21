@@ -60,5 +60,14 @@ namespace karma.Controllers
 
             return Ok("Successfully updated item.");
         }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            string sql = "DELETE FROM item_list WHERE id = ?";
+            await _data.SaveData(sql, new { id }, _config.GetConnectionString("default"));
+
+            return Ok("Successfully deleted item.");
+        }
     }
 }
