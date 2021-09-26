@@ -5,4 +5,8 @@
     <RootNamespace>karma</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers" />
+  </ItemGroup>
+
 </Project>
