@@ -8,6 +8,6 @@ namespace Domain.Entities.User
 {
     public class User : IdentityUser
     {
-        public String fullname { get; set; }
+        public String FullName { get; set; }
     }
 }

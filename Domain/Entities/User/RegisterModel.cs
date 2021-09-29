@@ -9,17 +9,13 @@ namespace Domain.Entities.User
     public class RegisterModel
     {
         [Required]
-        [StringLength(30, ErrorMessage = "UserName doesnt match format", MinimumLength = 5)]
-        public String username { get; set; }
+        public String Username { get; set; }
 
         [Required]
-        [StringLength(30, ErrorMessage = "Name and surename dont match format", MinimumLength = 5)]
-        public String fullname { get; set; }
+        public String Fullname { get; set; }
 
         [Required]
-        [StringLength(30, ErrorMessage = "Password doesnt match format", MinimumLength = 3)]
-        //[DataType(DataType.Password)]
-        public String password { get; set; }
+        public String Password { get; set; }
 
 
     }

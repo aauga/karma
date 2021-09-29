@@ -9,9 +9,8 @@ namespace Domain.Entities.User
     public class LogInModel
     {
         [Required]
-        [StringLength(30, ErrorMessage = "Username too long", MinimumLength = 5)]
-        public String username { get; set; }
+        public String Username { get; set; }
         [Required]
-        public String password { get; set; }
+        public String Password { get; set; }
     }
 }

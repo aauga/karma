@@ -19,16 +19,16 @@ namespace Karma.Controllers
 {
     [Route("api/user")]
     [ApiController]
-    public class AuthenticateController : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
-        private readonly UserManager<User> userManager;
-        private readonly IConfiguration config;
+        private readonly UserManager<User> _userManager;
+        private readonly IConfiguration _config;
 
 
-        public AuthenticateController(UserManager<User> userManager, IConfiguration configuration)
+        public AuthenticationController(UserManager<User> userManager, IConfiguration configuration)
         {
-            this.userManager = userManager;
-            config = configuration;
+            _userManager = userManager;
+            _config = configuration;
         }
 
         [HttpPost]
@@ -37,15 +37,15 @@ namespace Karma.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userExists = await userManager.FindByNameAsync(model.username);
+                var userExists = await _userManager.FindByNameAsync(model.Username);
                 if (userExists != null)
                 {
                     return BadRequest();
                 }
                 else
                 {
-                    User user = new User() { UserName = model.username };
-                    var result = await userManager.CreateAsync(user, model.password);
+                    User user = new User() { UserName = model.Username };
+                    var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         return Ok();
@@ -69,8 +69,8 @@ namespace Karma.Controllers
         {
             if(ModelState.IsValid)
             {
-                var user = await userManager.FindByNameAsync(model.username);
-                if (user != null && await userManager.CheckPasswordAsync(user, model.password))
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
                     String usersToken = AccessTokenGenerator.GenerateAccessToken(user);
                     return Ok(usersToken);
