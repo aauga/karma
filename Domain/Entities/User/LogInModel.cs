@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Domain.Entities.User
+{
+    public class LogInModel
+    {
+        [Required]
+        [StringLength(30, ErrorMessage = "Username too long", MinimumLength = 5)]
+        public String username { get; set; }
+        [Required]
+        public String password { get; set; }
+    }
+}
