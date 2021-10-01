@@ -50,22 +50,17 @@ namespace Karma.Controllers
                     {
                         return Ok();
                     }
-                    else
-                    {
-                        return StatusCode(500, "Internal Server Error. Something went Wrong!");
-                    }
+                    return StatusCode(500, "Internal Server Error. Something went Wrong!");
+                    
                 }
             }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LogInModel model)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if(ModelState.IsValid)
             {
@@ -75,19 +70,9 @@ namespace Karma.Controllers
                     String usersToken = AccessTokenGenerator.GenerateAccessToken(user);
                     return Ok(usersToken);
                 }
-                else
-                {
-                    return Unauthorized();
-                }
+                return Unauthorized();
             }   
-            else
-            {
-                return BadRequest();
-            }
-
-            
+            return BadRequest();
         }
-        //Auth0
-
     }
 }

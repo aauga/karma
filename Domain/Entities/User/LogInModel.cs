@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.User
 {
-    public class LogInModel
+    public class LoginModel
     {
         [Required]
         public String Username { get; set; }
