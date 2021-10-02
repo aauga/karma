@@ -1,4 +1,7 @@
+using Application.Activities;
+using Application.Core;
 using Domain.Entities.User;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Persistance;
+using Persistence;
 using Services;
 
 namespace WebApi
@@ -41,6 +44,13 @@ namespace WebApi
                     policy.AllowAnyHeader().AllowCredentials().WithOrigins("http://localhost:3000");
                 }); 
             });
+            services.AddDbContext<ItemDbContext>(opt =>
+            {
+                opt.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+            }
+            );
+            services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddAutoMapper(typeof(Mapper).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
