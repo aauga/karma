@@ -6,12 +6,14 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Application.Activities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
     public class ItemController : BaseApiController
     {
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Item>>> GetItems()
         {
             return await Mediator.Send(new List.Query());

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Persistance;
+using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    [Migration("20211002145337_InitialCreateItemTable")]
-    partial class InitialCreateItemTable
+    [Migration("20211005161735_firstMig")]
+    partial class firstMig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

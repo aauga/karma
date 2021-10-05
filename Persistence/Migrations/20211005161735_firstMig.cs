@@ -2,7 +2,7 @@
 
 namespace Persistence.Migrations
 {
-    public partial class InitialCreateItemTable : Migration
+    public partial class firstMig : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
