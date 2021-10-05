@@ -15,15 +15,21 @@ namespace Persistence
             {
                 return;
             }
+            
             var items = new List<Item>
             {
                 new Item
                 {
-                    Name = "Jonas",
-                    Description = "Mokslininkas",
+                    Name = "A white t-shirt",
+                    Description = "A lovely white t-shirt with cats and dogs on it",
                 },
-                
-             };
+                new Item
+                {
+                    Name = "2001 computer",
+                    Description = "Old computer I do not need anymore",
+                }
+            };
+            
             await Context.Items.AddRangeAsync(items);
             await Context.SaveChangesAsync();
         }
