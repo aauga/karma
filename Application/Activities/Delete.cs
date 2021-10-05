@@ -14,7 +14,7 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
-            public int Id { get; set; }
+            public Guid Id { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
