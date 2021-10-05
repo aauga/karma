@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditItem(int id, Item item)
+        public async Task<IActionResult> EditItem(Guid id, Item item)
         {
             item.Id = id;
             return Ok(await Mediator.Send(new Edit.Command { Item = item }));

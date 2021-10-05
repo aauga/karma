@@ -19,7 +19,6 @@ namespace Persistence
             {
                 new Item
                 {
-                    Id = 5,
                     Name = "Jonas",
                     Description = "Mokslininkas",
                 },
