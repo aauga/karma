@@ -1,4 +1,4 @@
-using Application.Activities;
+using Application.Items;
 using Application.Core;
 using Domain.Entities.User;
 using MediatR;

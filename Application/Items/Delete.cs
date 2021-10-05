@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Activities
+namespace Application.Items
 {
-    public class Create
+    public class Delete
     {
         public class Command : IRequest
         {
-            public Item Item { get; set; }
+            public Guid Id { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -27,7 +27,8 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Items.Add(request.Item);
+                var item = await _context.Items.FindAsync(request.Id);
+                _context.Remove(item);
                 await _context.SaveChangesAsync();
                 return Unit.Value;
             }
