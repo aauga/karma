@@ -9,9 +9,9 @@ namespace Persistence
 {
     public class ItemSeed
     {
-        public static async Task SeedData(ItemDbContext Context)
+        public static async Task SeedData(ItemDbContext context)
         {
-            if (Context.Items.Any())
+            if (context.Items.Any())
             {
                 return;
             }
@@ -30,8 +30,8 @@ namespace Persistence
                 }
             };
             
-            await Context.Items.AddRangeAsync(items);
-            await Context.SaveChangesAsync();
+            await context.Items.AddRangeAsync(items);
+            await context.SaveChangesAsync();
         }
     }
 }
