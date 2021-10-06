@@ -36,11 +36,10 @@ export default function login() {
 
   return (
 <Container>
-  <Row className="justify-content-md-center">
-    <Col md="auto">
+  <Row className="justify-content-md-center g-4 m-1" xs={1} md={2}>
+    <Col>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Group controlId="exampleForm.ControlInput1">
-          {errors.username && <Alert variant="danger">This field is required!</Alert>}
           <Form.Label>Username*</Form.Label>
           <Form.Control type="text" placeholder="username" {...register("username")} />
         </Form.Group>
@@ -50,6 +49,8 @@ export default function login() {
         </Form.Group>
         <Button type="submit">Submit</Button>
       </Form>
+      {errors.username && <Alert variant="danger" className="m-2">Username field is required!</Alert>}
+      {errors.password && <Alert variant="danger" className="m-2">Password field is required!</Alert>}
     </Col>
   </Row>
 </Container>
