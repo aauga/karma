@@ -6,12 +6,14 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Application.Activities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
     public class ItemController : BaseApiController
     {
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Item>>> GetItems()
         {
             return await Mediator.Send(new List.Query());
@@ -24,16 +26,16 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateItem(Item item)
+        public async Task<IActionResult> CreateItem(ItemModel item)
         {
-            return Ok(await Mediator.Send(new Create.Command { Item = item }));
+            return Ok(await Mediator.Send(new Create.Command { ItemModel = item }));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> EditItem(int id, Item item)
         {
             item.Id = id;
-            return Ok(await Mediator.Send(new Edit.Command { Item = item }));
+            return base.Ok((object)await Mediator.Send(new Edit.Command { Item = item }));
         }
 
         [HttpDelete("{id}")]

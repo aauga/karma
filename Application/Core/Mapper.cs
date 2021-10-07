@@ -12,7 +12,7 @@ namespace Application.Core
     {
         public Mapper()
         {
-            CreateMap<Item, Item>();
+            CreateMap<ItemModel, ItemModel>();
         }
     }
 }

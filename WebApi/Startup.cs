@@ -1,7 +1,9 @@
 using Application.Activities;
 using Application.Core;
-using Domain.Entities.User;
+using CloudinaryDotNet;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,47 +12,64 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using Services;
+using Microsoft.IdentityModel.Logging;
+using System.Net;
 
 namespace WebApi
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration Configuration;
 
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             services.AddControllers();
-            services.AddSingleton<AccessTokenGenerator>();
-            services.AddDbContext<UserDbContext>(options => options.UseSqlServer("name=ConnectionStrings:DbConnection"));
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
-            services.AddAuthentication().AddJwtBearer();
-            services.AddSwaggerGen(c =>
+            IdentityModelEventSource.ShowPII = true;
+
+            services.AddAuthentication(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "test", Version = "v1" });
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://kristupas.eu.auth0.com/";
+                options.Audience = "https://karma";
             });
+
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyHeader().AllowCredentials().WithOrigins("http://localhost:3000");
+                    policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                 }); 
             });
             services.AddDbContext<ItemDbContext>(opt =>
             {
-                opt.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }
             );
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(Mapper).Assembly);
+
+            Account account = new Account(Configuration["Cloudinary:Name"],Configuration["Cloudinary:ApiKey"],Configuration["Cloudinary:ApiSecret"]);
+            Cloudinary cloudinary = new Cloudinary(account);
+            cloudinary.Api.Secure = true;
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,8 +78,7 @@ namespace WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "test v1"));
+               
             }
 
             app.UseHttpsRedirection();

@@ -14,7 +14,7 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
-            public Item Item { get; set; }
+            public ItemModel ItemModel { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -27,7 +27,9 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Items.Add(request.Item);
+                Item item = new Item();
+                //request.
+                _context.Items.Add(item);
                 await _context.SaveChangesAsync();
                 return Unit.Value;
             }
