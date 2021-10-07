@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
-using Application.Activities;
+using Application.Items;
 
 namespace WebApi.Controllers
 {
@@ -18,7 +19,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        public async Task<ActionResult<Item>> GetItem(Guid id)
         {
             return await Mediator.Send(new Details.Query { Id = id });
         }
@@ -30,14 +31,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditItem(int id, Item item)
+        public async Task<IActionResult> EditItem(Guid id, Item item)
         {
             item.Id = id;
             return Ok(await Mediator.Send(new Edit.Command { Item = item }));
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
+        public async Task<IActionResult> DeleteItem(Guid id)
         {
             return Ok(await Mediator.Send(new Delete.Command { Id = id }));
         }

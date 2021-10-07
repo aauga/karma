@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Domain.Entities;
+﻿using Domain.Entities;
 using MediatR;
 using Persistence;
 using System;
@@ -9,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Activities
+namespace Application.Items
 {
-    public class Edit
+    public class Create
     {
         public class Command : IRequest
         {
@@ -20,18 +19,15 @@ namespace Application.Activities
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
-            private readonly IMapper _mapper;
 
-            public Handler(ItemDbContext context, IMapper mapper)
+            public Handler(ItemDbContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var item = await _context.Items.FindAsync(request.Item.Id);
-                _mapper.Map(request.Item, item);
+                _context.Items.Add(request.Item);
                 await _context.SaveChangesAsync();
                 return Unit.Value;
             }
