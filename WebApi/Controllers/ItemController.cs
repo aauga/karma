@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Application.Activities;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace WebApi.Controllers
 {
+    [Route("api/item")]
     public class ItemController : BaseApiController
     {
         [HttpGet]
@@ -25,14 +27,14 @@ namespace WebApi.Controllers
             return await Mediator.Send(new Details.Query { Id = id });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateItem(ItemModel item)
+        [HttpPost,Route("CreateItem")]
+        public async Task<IActionResult> CreateItem([FromForm]Item item)
         {
-            return Ok(await Mediator.Send(new Create.Command { ItemModel = item }));
+            return Ok(await Mediator.Send(new Create.Command { Item = item }));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditItem(int id, Item item)
+        public async Task<IActionResult> EditItem(Guid id, Item item)
         {
             item.Id = id;
             return base.Ok((object)await Mediator.Send(new Edit.Command { Item = item }));
