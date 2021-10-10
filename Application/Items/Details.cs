@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Activities
+namespace Application.Items
 {
     public class Details
     {
         public class Query : IRequest<Item>
         {
-            public int Id { get; set; }
+            public Guid Id { get; set; }
         }
         public class Handler : IRequestHandler<Query, Item>
         {

@@ -1,4 +1,4 @@
-using Application.Activities;
+using Application.Items;
 using Application.Core;
 using CloudinaryDotNet;
 using MediatR;
@@ -26,11 +26,11 @@ namespace WebApi
 {
     public class Startup
     {
-        private readonly IConfiguration Configuration;
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -60,15 +60,15 @@ namespace WebApi
             });
             services.AddDbContext<ItemDbContext>(opt =>
             {
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            }
-            );
+                opt.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
+            });
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(Mapper).Assembly);
 
-            Account account = new Account(Configuration["Cloudinary:Name"],Configuration["Cloudinary:ApiKey"],Configuration["Cloudinary:ApiSecret"]);
+            Account account = new Account(_configuration["Cloudinary:Name"],_configuration["Cloudinary:ApiKey"],_configuration["Cloudinary:ApiSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
             cloudinary.Api.Secure = true;
+            services.AddSingleton<IImageUpload>(s => new ImageUpload(cloudinary));
             
         }
 

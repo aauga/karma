@@ -9,12 +9,13 @@ namespace Persistence
 {
     public class ItemSeed
     {
-        public static async Task SeedData(ItemDbContext Context)
+        public static async Task SeedData(ItemDbContext context)
         {
-            if (Context.Items.Any())
+            if (context.Items.Any())
             {
                 return;
             }
+            
             var items = new List<Item>
             {
                 new Item
@@ -23,10 +24,15 @@ namespace Persistence
                     Name = "Jonas",
                     Description = "Mokslininkas",
                 },
-                
-             };
-            await Context.Items.AddRangeAsync(items);
-            await Context.SaveChangesAsync();
+                new Item
+                {
+                    Name = "2001 computer",
+                    Description = "Old computer I do not need anymore",
+                }
+            };
+            
+            await context.Items.AddRangeAsync(items);
+            await context.SaveChangesAsync();
         }
     }
 }

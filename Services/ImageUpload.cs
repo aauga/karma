@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    class ImageUploadService
+    public class ImageUpload : IImageUpload
     {
-        public Cloudinary _cloudinary;
-        public ImageUploadService(Cloudinary cloudinary)
+        private readonly Cloudinary _cloudinary;
+        public ImageUpload(Cloudinary cloudinary)
         {
             _cloudinary = cloudinary;
         }
 
         public List<String> UploadImages(List<IFormFile> images)
         {
-            List<String> urls = new List<string>();
+            List<String> urls = new List<String>();
 
             foreach (IFormFile image in images)
             {
@@ -29,15 +29,10 @@ namespace Services
                     File = new FileDescription(image.Name, image.OpenReadStream())
                 };
                 var uploadResult = _cloudinary.Upload(uploadParams);
-                urls.Add(uploadResult.ToString());
+                urls.Add(uploadResult.SecureUrl.ToString());
             }
 
             return urls;
         }
-
-
-
-
-
     }
 }

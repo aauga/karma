@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Activities
+namespace Application.Items
 {
     public class List
     {
