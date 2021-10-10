@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
-using Application.Activities;
+using Application.Items;
 
 namespace WebApi.Controllers
 {

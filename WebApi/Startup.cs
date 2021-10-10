@@ -46,8 +46,8 @@ namespace WebApi
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = "https://kristupas.eu.auth0.com/";
-                options.Audience = "https://karma";
+                options.Authority = _configuration["Auth0:Authority"];
+                options.Audience = _configuration["Auth0:Audience"];
             });
 
 
