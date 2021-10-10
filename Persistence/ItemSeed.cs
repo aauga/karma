@@ -20,13 +20,8 @@ namespace Persistence
             {
                 new Item
                 {
-<<<<<<< HEAD
-                    Name = "Jonas",
-                    Description = "Mokslininkas",
-=======
                     Name = "A white t-shirt",
                     Description = "A lovely white t-shirt with cats and dogs on it",
->>>>>>> a8eefecf2aab530e2e22e99145487eecec8a4bd5
                 },
                 new Item
                 {
