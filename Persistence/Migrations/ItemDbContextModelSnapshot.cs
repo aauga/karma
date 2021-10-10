@@ -35,6 +35,20 @@ namespace Persistence.Migrations
 
                     b.ToTable("Items");
                 });
+
+            modelBuilder.Entity("Domain.Entities.ListingImage", b =>
+                {
+                    b.Property<Guid>("ListingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ListingId");
+
+                    b.ToTable("Images");
+                });
 #pragma warning restore 612, 618
         }
     }

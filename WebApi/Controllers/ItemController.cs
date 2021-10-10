@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateItem(Item item)
+        public async Task<IActionResult> CreateItem([FromForm]Item item)
         {
             return Ok(await Mediator.Send(new Create.Command { Item = item }));
         }
@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> EditItem(Guid id, Item item)
         {
             item.Id = id;
-            return Ok(await Mediator.Send(new Edit.Command { Item = item }));
+            return base.Ok(await Mediator.Send(new Edit.Command { Item = item }));
         }
 
         [HttpDelete("{id}")]
