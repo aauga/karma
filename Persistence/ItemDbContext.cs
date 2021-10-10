@@ -10,10 +10,11 @@ namespace Persistence
 {
     public class ItemDbContext : DbContext
     {
-        public ItemDbContext(DbContextOptions options) : base(options)
+        public ItemDbContext(DbContextOptions<ItemDbContext> options) : base(options)
         {
 
         }
         public DbSet<Item> Items { get; set; }
+        public DbSet<ListingImage> Images { get; set; }
     }
 }
