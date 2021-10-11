@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Core;
+using Domain.Entities;
 using MediatR;
 using Persistence;
 using System;
@@ -12,20 +13,21 @@ namespace Application.Activities
 {
     public class Details
     {
-        public class Query : IRequest<Item>
+        public class Query : IRequest<Result<Item>>
         {
-            public int Id { get; set; }
+            public Guid Id { get; set; }
         }
-        public class Handler : IRequestHandler<Query, Item>
+        public class Handler : IRequestHandler<Query, Result<Item>>
         {
             private readonly ItemDbContext _context;
             public Handler(ItemDbContext context)
             {
                 _context = context;
             }
-            public async Task<Item> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<Item>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Items.FindAsync(request.Id);
+                var item = await _context.Items.FindAsync(request.Id);
+                return Result<Item>.Success(item);
             }
         }
     }
