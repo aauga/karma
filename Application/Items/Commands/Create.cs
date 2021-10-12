@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Items
+namespace Application.Items.Commands
 {
     public class Create
     {

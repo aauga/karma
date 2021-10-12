@@ -1,4 +1,4 @@
-using Application.Items;
+using Application.Items.Queries;
 using Application.Core;
 using CloudinaryDotNet;
 using MediatR;

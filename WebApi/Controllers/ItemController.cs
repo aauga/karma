@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
-using Application.Items;
+using Application.Items.Commands;
+using Application.Items.Queries;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers

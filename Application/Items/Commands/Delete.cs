@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Domain.Entities;
+﻿using Domain.Entities;
 using MediatR;
 using Persistence;
 using System;
@@ -10,25 +9,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Exceptions;
 
-namespace Application.Items
+namespace Application.Items.Commands
 {
-    public class Edit
+    public class Delete
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public Item Item { get; set; }
             public string User { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
-            private readonly IMapper _mapper;
 
-            public Handler(ItemDbContext context, IMapper mapper)
+            public Handler(ItemDbContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -44,11 +40,8 @@ namespace Application.Items
                 {
                     throw new ConflictException($"Item {request.Id} does not belong to the client");
                 }
-
-                request.Item.Id = request.Id;
-                request.Item.Uploader = request.User;
-
-                _mapper.Map(request.Item, item);
+                
+                _context.Remove(item);
                 
                 await _context.SaveChangesAsync();
                 
