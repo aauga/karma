@@ -67,5 +67,16 @@ namespace WebApi.Controllers
             
             return NoContent();
         }
+
+        [Authorize]
+        [HttpPost("redeem/{id}")]
+        public async Task<IActionResult> RedeemItem(Guid id)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new Redeem.Command {Id = id, User = user});
+            
+            return NoContent();
+        }
     }
 }
