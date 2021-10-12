@@ -36,12 +36,12 @@ namespace Application.Items.Commands
 
                 if (item.Redeemer != null)
                 {
-                    throw new ConflictException($"Item {request.Id} is already redeemed");
+                    throw new ConflictException($"Item {request.Id} has already been redeemed");
                 }
 
                 if (item.Uploader == request.User)
                 {
-                    throw new ConflictException($"Item {request.Id} does not belong to the client");
+                    throw new ConflictException($"Item {request.Id} belongs to the client, therefore can not be redeemed");
                 }
 
                 item.Redeemer = request.User;
