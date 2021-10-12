@@ -15,7 +15,8 @@ namespace WebApi.Filters
         {
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
-                { typeof(NotFoundException), HandleNotFoundException }
+                { typeof(NotFoundException), HandleNotFoundException },
+                { typeof(ConflictException), HandleConflictException }
             };
         }
 
@@ -88,6 +89,23 @@ namespace WebApi.Filters
                 context.Result = new NotFoundObjectResult(details);
             }
 
+            context.ExceptionHandled = true;
+        }
+        
+        private void HandleConflictException(ExceptionContext context)
+        {
+            if (context.Exception is ConflictException exception)
+            {
+                var details = new ProblemDetails()
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.8",
+                    Title = "Conflict",
+                    Detail = exception.Message
+                };
+
+                context.Result = new ConflictObjectResult(details);
+            }
+            
             context.ExceptionHandled = true;
         }
     }
