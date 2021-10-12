@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(Guid id)
+        public async Task<ActionResult<Item>> GetItem([FromRoute] Guid id)
         {
             return Ok(await Mediator.Send(new Details.Query { Id = id }));
         }
@@ -48,7 +48,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditItem(Guid id, Item item)
+        public async Task<IActionResult> EditItem([FromRoute] Guid id, [FromBody] Item item)
         {
             var user = await GetUser();
             
@@ -59,7 +59,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(Guid id)
+        public async Task<IActionResult> DeleteItem([FromRoute] Guid id)
         {
             var user = await GetUser();
             
@@ -70,7 +70,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost("redeem/{id}")]
-        public async Task<IActionResult> RedeemItem(Guid id)
+        public async Task<IActionResult> RedeemItem([FromRoute] Guid id)
         {
             var user = await GetUser();
 
