@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
-    public class ItemController : BaseApiController
+    public class ItemsController : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Item>>> GetItems()
