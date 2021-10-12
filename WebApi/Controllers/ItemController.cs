@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Item>>> GetItems()
         {
-            return await Mediator.Send(new List.Query());
+            var items = await Mediator.Send(new List.Query());
+
+            if (items.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(items);
         }
 
         [HttpGet("{id}")]
