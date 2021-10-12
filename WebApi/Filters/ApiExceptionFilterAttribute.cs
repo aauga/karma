@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,6 +15,7 @@ namespace WebApi.Filters
         {
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
+                { typeof(NotFoundException), HandleNotFoundException }
             };
         }
 
@@ -27,6 +29,7 @@ namespace WebApi.Filters
         private void HandleException(ExceptionContext context)
         {
             Type type = context.Exception.GetType();
+            
             if (_exceptionHandlers.ContainsKey(type))
             {
                 _exceptionHandlers[type].Invoke(context);
@@ -67,6 +70,23 @@ namespace WebApi.Filters
             {
                 StatusCode = StatusCodes.Status500InternalServerError
             };
+
+            context.ExceptionHandled = true;
+        }
+        
+        private void HandleNotFoundException(ExceptionContext context)
+        {
+            if (context.Exception is NotFoundException exception)
+            {
+                var details = new ProblemDetails()
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                    Title = "Not Found",
+                    Detail = exception.Message
+                };
+
+                context.Result = new NotFoundObjectResult(details);
+            }
 
             context.ExceptionHandled = true;
         }
