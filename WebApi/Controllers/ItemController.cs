@@ -15,7 +15,7 @@ namespace WebApi.Controllers
     public class ItemController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Item>>> GetItems()
+        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
         {
             var items = await Mediator.Send(new List.Query());
 

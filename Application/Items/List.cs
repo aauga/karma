@@ -13,11 +13,11 @@ namespace Application.Items
 {
     public class List
     {
-        public class Query : IRequest<List<Item>>
+        public class Query : IRequest<IEnumerable<Item>>
         {
             
         }
-        public class Handler : IRequestHandler<Query, List<Item>>
+        public class Handler : IRequestHandler<Query, IEnumerable<Item>>
         {
             private readonly ItemDbContext _context;
             public Handler(ItemDbContext context)
@@ -25,7 +25,7 @@ namespace Application.Items
                 _context = context;
             }
 
-            public async Task<List<Item>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IEnumerable<Item>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.Items.ToListAsync(cancellationToken);
             }
