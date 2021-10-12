@@ -8,6 +8,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Application.Items;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
@@ -29,13 +30,19 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Item>> GetItem(Guid id)
         {
-            return await Mediator.Send(new Details.Query { Id = id });
+            return Ok(await Mediator.Send(new Details.Query { Id = id }));
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateItem([FromForm]Item item)
+        public async Task<IActionResult> CreateItem([FromBody] Item item)
         {
-            return Ok(await Mediator.Send(new Create.Command { Item = item }));
+            var user = await GetUser();
+            
+            await Mediator.Send(new Create.Command { Item = item, User = user });
+
+            // check how to implement Created()
+            return NoContent();
         }
 
         [HttpPut("{id}")]
