@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 
 namespace Application.Items
 {
@@ -25,7 +26,14 @@ namespace Application.Items
             }
             public async Task<Item> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Items.FindAsync(request.Id);
+                var item = await _context.Items.FindAsync(request.Id);
+
+                if (item == null)
+                {
+                    throw new NotFoundException(nameof(Item), request.Id);
+                }
+
+                return item;
             }
         }
     }
