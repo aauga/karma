@@ -21,6 +21,7 @@ using System.Security.Claims;
 using Services;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
+using WebApi.Filters;
 
 namespace WebApi
 {
@@ -37,8 +38,12 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            services.AddControllers();
             IdentityModelEventSource.ShowPII = true;
+            
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ApiExceptionFilterAttribute>();
+            });
 
             services.AddAuthentication(options =>
             {
@@ -49,8 +54,7 @@ namespace WebApi
                 options.Authority = _configuration["Auth0:Authority"];
                 options.Audience = _configuration["Auth0:Audience"];
             });
-
-
+            
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -58,10 +62,12 @@ namespace WebApi
                     policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                 }); 
             });
+            
             services.AddDbContext<ItemDbContext>(opt =>
             {
                 opt.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
             });
+            
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(Mapper).Assembly);
 
@@ -69,7 +75,6 @@ namespace WebApi
             Cloudinary cloudinary = new Cloudinary(account);
             cloudinary.Api.Secure = true;
             services.AddSingleton<IImageUpload>(s => new ImageUpload(cloudinary));
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
