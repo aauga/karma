@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 
 namespace Application.Items
 {
@@ -15,6 +16,7 @@ namespace Application.Items
         public class Command : IRequest
         {
             public Guid Id { get; set; }
+            public string User { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -28,8 +30,21 @@ namespace Application.Items
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.Id);
+
+                if (item == null)
+                {
+                    throw new NotFoundException(nameof(Item), request.Id);
+                }
+
+                if (item.Uploader != request.User)
+                {
+                    throw new ConflictException($"Item {request.Id} does not belong to the client");
+                }
+                
                 _context.Remove(item);
+                
                 await _context.SaveChangesAsync();
+                
                 return Unit.Value;
             }
         }

@@ -56,10 +56,15 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
         {
-            return Ok(await Mediator.Send(new Delete.Command { Id = id }));
+            var user = await GetUser();
+            
+            await Mediator.Send(new Delete.Command { Id = id, User = user });
+            
+            return NoContent();
         }
     }
 }
