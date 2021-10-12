@@ -45,11 +45,15 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditItem(Guid id, Item item)
         {
-            item.Id = id;
-            return base.Ok(await Mediator.Send(new Edit.Command { Item = item }));
+            var user = await GetUser();
+            
+            await Mediator.Send(new Edit.Command { Id = id, Item = item, User = user });
+            
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
