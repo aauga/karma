@@ -9,19 +9,22 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
-namespace Application.Items
+namespace Application.Items.Commands
 {
     public class Create
     {
         public class Command : IRequest
         {
             public Item Item { get; set; }
+            public string User { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
             private readonly ImageUpload _imgUpload;
+            
             public Handler(ItemDbContext context, IImageUpload imageUpload)
             {
                 _imgUpload = (ImageUpload)imageUpload;
@@ -30,18 +33,26 @@ namespace Application.Items
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-              
-                List<String> urls = _imgUpload.UploadImages(request.Item.PostedFiles);
-                foreach(String url in urls)
+                if (request.Item.PostedFiles != null)
                 {
-                    _context.Images.Add(new ListingImage
+                    List<String> urls = _imgUpload.UploadImages(request.Item.PostedFiles);
+                
+                    foreach(String url in urls)
                     {
-                        ListingId = request.Item.Id,
-                        ImageUrl = url
-                    });
+                        _context.Images.Add(new ListingImage
+                        {
+                            ListingId = request.Item.Id,
+                            ImageUrl = url
+                        });
+                    }
                 }
+
+                request.Item.Uploader = request.User;
+                
                 _context.Items.Add(request.Item);
+                
                 await _context.SaveChangesAsync();
+                
                 return Unit.Value;
             }
         }

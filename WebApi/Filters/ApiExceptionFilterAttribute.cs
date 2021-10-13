@@ -43,7 +43,7 @@ namespace WebApi.Filters
                 return;
             }
 
-            HandleUnknownException(context);
+            //HandleUnknownException(context);
         }
         
         private void HandleInvalidModelStateException(ExceptionContext context)
@@ -64,7 +64,8 @@ namespace WebApi.Filters
             {
                 Status = StatusCodes.Status500InternalServerError,
                 Title = "An error occurred while processing your request",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Detail = context.Exception.Message
             };
 
             context.Result = new ObjectResult(details)

@@ -7,30 +7,33 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 
-namespace Application.Items
+namespace Application.Items.Queries
 {
-    public class Delete
+    public class Details
     {
-        public class Command : IRequest
+        public class Query : IRequest<Item>
         {
             public Guid Id { get; set; }
         }
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Query, Item>
         {
             private readonly ItemDbContext _context;
-
             public Handler(ItemDbContext context)
             {
                 _context = context;
             }
-
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Item> Handle(Query request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.Id);
-                _context.Remove(item);
-                await _context.SaveChangesAsync();
-                return Unit.Value;
+
+                if (item == null)
+                {
+                    throw new NotFoundException(nameof(Item), request.Id);
+                }
+
+                return item;
             }
         }
     }

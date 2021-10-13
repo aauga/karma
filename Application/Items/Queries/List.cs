@@ -10,15 +10,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Items
+namespace Application.Items.Queries
 {
     public class List
     {
-        public class Query : IRequest<List<Item>>
+        public class Query : IRequest<IEnumerable<Item>>
         {
             
         }
-        public class Handler : IRequestHandler<Query, List<Item>>
+        public class Handler : IRequestHandler<Query, IEnumerable<Item>>
         {
             private readonly ItemDbContext _context;
             public Handler(ItemDbContext context)
@@ -26,19 +26,24 @@ namespace Application.Items
                 _context = context;
             }
 
-            public async Task<List<Item>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IEnumerable<Item>> Handle(Query request, CancellationToken cancellationToken)
             {
                 List<Item> items = await _context.Items.ToListAsync(cancellationToken);
+                
                 foreach(Item item in items)
                 {
                     List<String> urls = new List<String>();
+                    
                     var result = _context.Images.Where(s => s.ListingId == item.Id).ToList();
+                    
                     foreach (var image in result)
                     {
                         urls.Add(image.ImageUrl);
                     }
+                    
                     item.ImageUrls = urls;
                 }
+                
                 return items;
             }
         }
