@@ -33,7 +33,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateItem([FromBody] Item item)
+        public async Task<IActionResult> CreateItem([FromForm] Item item)
         {
             var user = await GetUser();
             
@@ -45,7 +45,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditItem([FromRoute] Guid id, [FromBody] Item item)
+        public async Task<IActionResult> EditItem([FromRoute] Guid id, [FromForm] Item item)
         {
             var user = await GetUser();
             
