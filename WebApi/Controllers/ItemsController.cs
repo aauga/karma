@@ -1,12 +1,9 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using MediatR;
 using Application.Items.Commands;
 using Application.Items.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -74,7 +71,7 @@ namespace WebApi.Controllers
         {
             var user = await GetUser();
 
-            await Mediator.Send(new Redeem.Command {Id = id, User = user});
+            await Mediator.Send(new Redeem.Command { Id = id, User = user });
             
             return NoContent();
         }
