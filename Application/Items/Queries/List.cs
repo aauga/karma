@@ -29,16 +29,21 @@ namespace Application.Items.Queries
             public async Task<IEnumerable<Item>> Handle(Query request, CancellationToken cancellationToken)
             {
                 List<Item> items = await _context.Items.ToListAsync(cancellationToken);
+                
                 foreach(Item item in items)
                 {
                     List<String> urls = new List<String>();
+                    
                     var result = _context.Images.Where(s => s.ListingId == item.Id).ToList();
+                    
                     foreach (var image in result)
                     {
                         urls.Add(image.ImageUrl);
                     }
+                    
                     item.ImageUrls = urls;
                 }
+                
                 return items;
             }
         }
