@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Core;
+using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ namespace Application.Items
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Item Item { get; set; }
         }
@@ -26,7 +27,7 @@ namespace Application.Items
                 RuleFor(x => x.Item).SetValidator(new ItemValidator());
             }
         }
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly ItemDbContext _context;
             private readonly ImageUpload _imgUpload;
@@ -36,7 +37,7 @@ namespace Application.Items
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
               
                 List<String> urls = _imgUpload.UploadImages(request.Item.PostedFiles);
@@ -49,8 +50,13 @@ namespace Application.Items
                     });
                 }
                 _context.Items.Add(request.Item);
-                await _context.SaveChangesAsync();
-                return Unit.Value;
+                var result = await _context.SaveChangesAsync() > 0;
+
+                if (!result)
+                {
+                    return Result<Unit>.Failure("Failed to create an item");
+                }
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }
