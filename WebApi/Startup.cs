@@ -22,6 +22,7 @@ using Services;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
 using FluentValidation.AspNetCore;
+using WebApi.Middleware;
 
 namespace WebApi
 {
@@ -80,10 +81,10 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<ExceptionMiddleware>();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-               
+
             }
 
             app.UseHttpsRedirection();
