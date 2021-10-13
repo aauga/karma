@@ -12,7 +12,8 @@ namespace Domain.Entities
     public class ListingImage
     {
         [Key]
-        public Guid ListingId { get; set; }
         public string ImageUrl { get; set; }
+        [ForeignKey("Item")]
+        public Guid ListingId { get; set; }
     }
 }
