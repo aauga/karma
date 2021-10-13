@@ -17,6 +17,8 @@ using Domain.Enums;
         public string City { get; set; }
         [NotMapped]
         public List<IFormFile> PostedFiles { get; set; }
+        [NotMapped]
+        public List<String> ImageUrls { get; set; }
         public string Uploader { get; set; }
         public string Redeemer { get; set; }
     }
