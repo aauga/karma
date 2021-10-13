@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -17,6 +18,13 @@ namespace Application.Items
         public class Command : IRequest
         {
             public Item Item { get; set; }
+        }
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Item).SetValidator(new ItemValidator());
+            }
         }
         public class Handler : IRequestHandler<Command>
         {

@@ -21,6 +21,7 @@ using System.Security.Claims;
 using Services;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
+using FluentValidation.AspNetCore;
 
 namespace WebApi
 {
@@ -64,6 +65,10 @@ namespace WebApi
             });
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(Mapper).Assembly);
+            services.AddControllers().AddFluentValidation(config =>
+            {
+                config.RegisterValidatorsFromAssemblyContaining<Create>();
+            });
 
             Account account = new Account(_configuration["Cloudinary:Name"],_configuration["Cloudinary:ApiKey"],_configuration["Cloudinary:ApiSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
