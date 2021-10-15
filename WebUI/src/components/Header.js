@@ -19,9 +19,11 @@ export default function Header() {
                 Profile
               </Link>
             )}
-            <Link to='/addlisting' className="nav-link">
-              Add Listing
-            </Link>
+            {isAuthenticated && (
+              <Link to='/addlisting' className='nav-link'>
+                Add Listing
+              </Link>
+            )}
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className='justify-content-end'>

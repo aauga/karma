@@ -17,6 +17,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Loading from './components/loading';
 import ProtectedRoute from './auth/protected-route';
 import AddListing from './pages/AddListing';
+import ItemDetails from './components/ItemDetails';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -30,7 +31,8 @@ function App() {
       <Header />
     <Switch>
       <Route path="/" exact component={Home} />
-      <Route path="/AddListing" component={AddListing} />
+      <Route path="/details/:id" exact component={ItemDetails} />
+      <ProtectedRoute path="/addlisting" component={AddListing} />
       <ProtectedRoute path="/profile" component={Profile} />
     </Switch>
     </div>
