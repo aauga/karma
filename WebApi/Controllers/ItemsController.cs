@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Items;
 using Domain.Entities;
 using Application.Items.Commands;
 using Application.Items.Queries;
@@ -29,6 +30,19 @@ namespace WebApi.Controllers
         public async Task<ActionResult<Item>> GetItem([FromRoute] Guid id)
         {
             return Ok(await Mediator.Send(new Details.Query { Id = id }));
+        }
+        
+        [HttpGet("filter")]
+        public async Task<ActionResult<List<Item>>> GetItems([FromQuery] string name, [FromQuery] string city)
+        {
+            var items = await Mediator.Send(new FilteredList.Query {Name = name, City = city});
+
+            if (!items.Any())
+            {
+                return NoContent();
+            }
+            
+            return Ok(items);
         }
 
         [Authorize]
