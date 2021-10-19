@@ -25,9 +25,9 @@ namespace Application.Items.Commands
             private readonly ItemDbContext _context;
             private readonly ImageUpload _imgUpload;
             
-            public Handler(ItemDbContext context, IImageUpload imageUpload)
+            public Handler(ItemDbContext context, ImageUpload imageUpload)
             {
-                _imgUpload = (ImageUpload)imageUpload;
+                _imgUpload = imageUpload;
                 _context = context;
             }
 
