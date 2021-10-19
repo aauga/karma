@@ -19,7 +19,7 @@ namespace Domain.Entities
         public List<String> ImageUrls { get; set; }
         public string Uploader { get; set; }
         public string Redeemer { get; set; }
-        public bool Equals(Item? other)
+        public bool Equals(Item other)
         {
             return (Name, Description, City) == (other.Name, other.Description, other.City);
         }
