@@ -21,7 +21,7 @@ namespace Domain.Entities
         public string Redeemer { get; set; }
         public bool Equals(Item other)
         {
-            return (Name, Description, City) == (other.Name, other.Description, other.City);
+            return (Name, Description, Category, City) == (other.Name, other.Description, other.Category, other.City);
         }
     }
 }
