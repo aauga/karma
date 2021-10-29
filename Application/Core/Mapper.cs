@@ -12,7 +12,7 @@ namespace Application.Core
     {
         public Mapper()
         {
-            CreateMap<Item, Item>();
+            CreateMap<Item, Item>().ForAllMembers(o => o.Condition((source, destination, member) => member != null)); ;
         }
     }
 }
