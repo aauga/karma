@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
+using Application.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Items.Commands
@@ -23,16 +25,23 @@ namespace Application.Items.Commands
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
-            private readonly ImageUpload _imgUpload;
+            private readonly IImageUpload _imgUpload;
             
             public Handler(ItemDbContext context, IImageUpload imageUpload)
             {
-                _imgUpload = (ImageUpload)imageUpload;
+                _imgUpload = imageUpload;
                 _context = context;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                var items = await _context.Items.ToListAsync(cancellationToken);
+
+                if (items.Any(item => item.Equals(request.Item)))
+                {
+                    throw new ConflictException("Such item already exists");
+                }
+                
                 if (request.Item.PostedFiles != null)
                 {
                     List<String> urls = _imgUpload.UploadImages(request.Item.PostedFiles);

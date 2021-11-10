@@ -1,14 +1,12 @@
-
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Enums;
 
-
- namespace Domain.Entities
+namespace Domain.Entities
 {
-    public class Item
+    public class Item : IEquatable<Item>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -21,5 +19,9 @@ using Domain.Enums;
         public List<String> ImageUrls { get; set; }
         public string Uploader { get; set; }
         public string Redeemer { get; set; }
+        public bool Equals(Item other)
+        {
+            return (Name, Description, Category, City) == (other.Name, other.Description, other.Category, other.City);
+        }
     }
 }
