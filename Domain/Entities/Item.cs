@@ -17,8 +17,8 @@ namespace Domain.Entities
         public List<IFormFile> PostedFiles { get; set; }
         [NotMapped]
         public List<String> ImageUrls { get; set; }
-        public User Uploader { get; set; }
-        public User Redeemer { get; set; }
+        public string Uploader { get; set; }
+        public string Redeemer { get; set; }
        
     }
 }

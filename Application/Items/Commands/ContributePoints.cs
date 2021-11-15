@@ -34,7 +34,6 @@ namespace Application.Items.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
                 if(item == null)

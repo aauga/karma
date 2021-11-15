@@ -41,13 +41,13 @@ namespace Application.Items.Commands
                     throw new NotFoundException(nameof(Item), request.Id);
                 }
 
-                if (item.Uploader.Username != user.Username)
+                if (item.Uploader != user.Username)
                 {
                     throw new ConflictException($"Item {request.Id} does not belong to the client");
                 }
 
                 request.Item.Id = request.Id;
-                request.Item.Uploader = user;
+                request.Item.Uploader = user.Username;
 
                 _mapper.Map(request.Item, item);
                 

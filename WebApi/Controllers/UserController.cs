@@ -12,13 +12,11 @@ namespace WebApi.Controllers
     {
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> onRegister ()
+        public async Task<IActionResult> onRegister()
         {
             var user = await GetUser();
             await Mediator.Send(new OnRegister.Command { User = user });
             return NoContent();
         }
-            
-            
     }
 }

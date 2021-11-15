@@ -15,6 +15,5 @@ namespace Domain.Entities
         public List<Item> Listings { get; set; }
         public List<PointContributor> Contributions { get; set; }
         public bool isVerified { get; set; }
-
     }
 }

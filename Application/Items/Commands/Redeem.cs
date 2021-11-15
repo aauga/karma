@@ -39,12 +39,12 @@ namespace Application.Items.Commands
                     throw new ConflictException($"Item {request.Id} has already been redeemed");
                 }
 
-                if (item.Uploader.Username == request.User)
+                if (item.Uploader == request.User)
                 {
                     throw new ConflictException($"Item {request.Id} belongs to the client, therefore can not be redeemed");
                 }
 
-                item.Redeemer = user;
+                item.Redeemer = user.Username;
 
                 await _context.SaveChangesAsync();
                 
