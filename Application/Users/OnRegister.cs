@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Domain.Entities;
+using MediatR;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.User
+namespace Application.Users
 {
     public class OnRegister
     {
@@ -26,11 +27,14 @@ namespace Application.User
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var check =_context.Users.FindAsync(request.User);
-                if (check == null)
+                var check = _context.Users.FindAsync(request.User);
+                if(check != null)
                 {
-                    await _context.SaveChangesAsync();
+                    ///throw an exception
+                    return Unit.Value;
                 }
+                await _context.AddAsync(new User { Username = request.User, KarmaPoints = 100, isVerified = false });
+                await _context.SaveChangesAsync();
                 return Unit.Value;
             }
         }

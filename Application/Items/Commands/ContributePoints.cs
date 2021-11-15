@@ -21,8 +21,7 @@ namespace Application.Items.Commands
         {
             public Guid Id { get; set; }
             public string User { get; set; }
-            public int Amount { get; set; }
-            public string Reasoning { get; set; }
+            public PointContributor Contributor { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -46,11 +45,12 @@ namespace Application.Items.Commands
                 {
                     ///throw exception
                 }
-                if(user.KarmaPoints < request.Amount)
+                if(user.KarmaPoints < request.Contributor.AmountOfPoints)
                 {
                     ///Not enough points
                 }
-                await _context.Contributors.AddAsync(new PointContributor{ User = user.Username , AmountOfPoints = request.Amount , Reasoning = request.Reasoning);
+                request.Contributor.User = user.Username;
+                await _context.Contributors.AddAsync(request.Contributor);
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;

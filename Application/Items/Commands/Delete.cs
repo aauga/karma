@@ -30,13 +30,14 @@ namespace Application.Items.Commands
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.Id);
+                var user = await _context.Users.FindAsync(request.User);
 
                 if (item == null)
                 {
                     throw new NotFoundException(nameof(Item), request.Id);
                 }
 
-                if (item.Uploader != request.User)
+                if (item.Uploader.Username != user.Username)
                 {
                     throw new ConflictException($"Item {request.Id} does not belong to the client");
                 }

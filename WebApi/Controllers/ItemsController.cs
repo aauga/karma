@@ -92,11 +92,11 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost("{id}")]
-        public async Task<IActionResult> ContributePoints ([FromRoute] Guid id,[FromBody] int amount)
+        public async Task<IActionResult> ContributePoints ([FromRoute] Guid id,[FromBody] PointContributor pointContributor)
         {
             var user = await GetUser();
 
-            await Mediator.Send(new ContributePoints.Command { User = user, Id = id, Amount = amount });
+            await Mediator.Send(new ContributePoints.Command { User = user, Id = id, Contributor = pointContributor });
 
             return NoContent();
         }
