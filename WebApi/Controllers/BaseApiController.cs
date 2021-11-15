@@ -20,7 +20,7 @@ namespace WebApi.Controllers
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(accessToken);
-            
+
             return token.Payload.Sub;
         }
     }

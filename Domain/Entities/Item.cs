@@ -12,7 +12,6 @@ namespace Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public ItemCategories Category { get; set; }
-        public List<PointContributor> Contributions { get; set; }
         public string City { get; set; }
         [NotMapped]
         public List<IFormFile> PostedFiles { get; set; }
