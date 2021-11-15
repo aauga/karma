@@ -56,9 +56,10 @@ namespace Application.Items.Commands
                     }
                 }
 
-                request.Item.Uploader = request.User;
+                var user = await _context.Users.FindAsync(request.User);
+                request.Item.Uploader = user.Username;
                 
-                _context.Items.Add(request.Item);
+                await _context.Items.AddAsync(request.Item);
                 
                 await _context.SaveChangesAsync();
                 

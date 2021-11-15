@@ -7,15 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Exceptions;
 
-namespace Application.Items.Commands
+namespace Application.Users
 {
-    public class Delete
+    public class OnRegister
     {
         public class Command : IRequest
         {
-            public Guid Id { get; set; }
             public string User { get; set; }
         }
         public class Handler : IRequestHandler<Command>
@@ -23,29 +21,20 @@ namespace Application.Items.Commands
             private readonly ItemDbContext _context;
 
             public Handler(ItemDbContext context)
-            {
+            { 
                 _context = context;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var item = await _context.Items.FindAsync(request.Id);
-                var user = await _context.Users.FindAsync(request.User);
-
-                if (item == null)
+                var check = _context.Users.FindAsync(request.User);
+                if(check != null)
                 {
-                    throw new NotFoundException(nameof(Item), request.Id);
+                    ///throw an exception
+                    return Unit.Value;
                 }
-
-                if (item.Uploader != user.Username)
-                {
-                    throw new ConflictException($"Item {request.Id} does not belong to the client");
-                }
-                
-                _context.Remove(item);
-                
+                await _context.AddAsync(new User { Username = request.User, KarmaPoints = 100, isVerified = false });
                 await _context.SaveChangesAsync();
-                
                 return Unit.Value;
             }
         }

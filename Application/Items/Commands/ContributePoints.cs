@@ -1,28 +1,33 @@
 ﻿using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Exceptions;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Items.Commands
 {
-    public class Delete
+    public class ContributePoints
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
             public string User { get; set; }
+            public PointContributor Contributor { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
 
-            public Handler(ItemDbContext context)
+            public Handler(ItemDbContext context, IImageUpload imageUpload)
             {
                 _context = context;
             }
@@ -31,21 +36,22 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
-
-                if (item == null)
+                if(item == null)
                 {
-                    throw new NotFoundException(nameof(Item), request.Id);
+                    ///throw exception
                 }
-
-                if (item.Uploader != user.Username)
+                if(user == null)
                 {
-                    throw new ConflictException($"Item {request.Id} does not belong to the client");
+                    ///throw exception
                 }
-                
-                _context.Remove(item);
-                
+                if(user.KarmaPoints < request.Contributor.AmountOfPoints)
+                {
+                    ///Not enough points
+                }
+                request.Contributor.User = user.Username;
+                await _context.Contributors.AddAsync(request.Contributor);
                 await _context.SaveChangesAsync();
-                
+
                 return Unit.Value;
             }
         }

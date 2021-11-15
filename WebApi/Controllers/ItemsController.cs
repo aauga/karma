@@ -89,5 +89,16 @@ namespace WebApi.Controllers
             
             return NoContent();
         }
+
+        [Authorize]
+        [HttpPost("{id}")]
+        public async Task<IActionResult> ContributePoints ([FromRoute] Guid id,[FromBody] PointContributor pointContributor)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new ContributePoints.Command { User = user, Id = id, Contributor = pointContributor });
+
+            return NoContent();
+        }
     }
 }

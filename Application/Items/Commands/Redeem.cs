@@ -28,7 +28,7 @@ namespace Application.Items.Commands
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.Id);
-
+                var user = await _context.Users.FindAsync(request.User);
                 if (item == null)
                 {
                     throw new NotFoundException(nameof(Item), request.Id);
@@ -44,7 +44,7 @@ namespace Application.Items.Commands
                     throw new ConflictException($"Item {request.Id} belongs to the client, therefore can not be redeemed");
                 }
 
-                item.Redeemer = request.User;
+                item.Redeemer = user.Username;
 
                 await _context.SaveChangesAsync();
                 

@@ -6,7 +6,7 @@ using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public class Item : IEquatable<Item>
+    public class Item
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -19,9 +19,6 @@ namespace Domain.Entities
         public List<String> ImageUrls { get; set; }
         public string Uploader { get; set; }
         public string Redeemer { get; set; }
-        public bool Equals(Item other)
-        {
-            return (Name, Description, Category, City) == (other.Name, other.Description, other.Category, other.City);
-        }
+       
     }
 }
