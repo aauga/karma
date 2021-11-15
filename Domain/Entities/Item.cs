@@ -13,6 +13,7 @@ namespace Domain.Entities
         public string Description { get; set; }
         public ItemCategories Category { get; set; }
         public string City { get; set; }
+        public DateTime ExpirationDate { get; set; }
         [NotMapped]
         public List<IFormFile> PostedFiles { get; set; }
         [NotMapped]

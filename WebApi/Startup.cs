@@ -22,6 +22,8 @@ using Services;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
 using WebApi.Filters;
+using Hangfire;
+using Hangfire.SqlServer;
 
 namespace WebApi
 {
@@ -39,7 +41,7 @@ namespace WebApi
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             IdentityModelEventSource.ShowPII = true;
-            
+
             services.AddControllers(options =>
             {
                 options.Filters.Add<ApiExceptionFilterAttribute>();
@@ -54,37 +56,57 @@ namespace WebApi
                 options.Authority = _configuration["Auth0:Authority"];
                 options.Audience = _configuration["Auth0:Audience"];
             });
-            
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
                     policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
-                }); 
+                });
             });
-            
+
             services.AddDbContext<ItemDbContext>(opt =>
             {
                 opt.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
             });
-            
+
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(Mapper).Assembly);
 
-            Account account = new Account(_configuration["Cloudinary:Name"],_configuration["Cloudinary:ApiKey"],_configuration["Cloudinary:ApiSecret"]);
+
+            Account account = new Account(_configuration["Cloudinary:Name"], _configuration["Cloudinary:ApiKey"], _configuration["Cloudinary:ApiSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
             cloudinary.Api.Secure = true;
-            services.AddSingleton<IImageUpload, ImageUpload>(_ => new ImageUpload(cloudinary));
+            services.AddSingleton<IImageUpload>(s => new ImageUpload(cloudinary));
+
+
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(_configuration.GetConnectionString("HangFire"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+
+            services.AddHangfireServer();
+
+            services.AddScoped<WinnerPicker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-               
+
             }
+            app.UseHangfireDashboard();
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -96,7 +118,7 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                
+                endpoints.MapHangfireDashboard(); ///localhost:44360/hangfire
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("API is working");

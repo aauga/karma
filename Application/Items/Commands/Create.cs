@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Application.Core;
 using Application.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Hangfire;
 
 namespace Application.Items.Commands
 {
@@ -26,6 +27,7 @@ namespace Application.Items.Commands
         {
             private readonly ItemDbContext _context;
             private readonly IImageUpload _imgUpload;
+            private readonly WinnerPicker _winnerPicker;
             
             public Handler(ItemDbContext context, IImageUpload imageUpload)
             {
@@ -60,7 +62,9 @@ namespace Application.Items.Commands
                 request.Item.Uploader = user.Username;
                 
                 await _context.Items.AddAsync(request.Item);
-                
+
+                BackgroundJob.Schedule(() => _winnerPicker.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
+
                 await _context.SaveChangesAsync();
                 
                 return Unit.Value;
