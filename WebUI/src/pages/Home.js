@@ -1,29 +1,43 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const baseURL = `${serverUrl}/api/item`;
+const baseURL = `${serverUrl}/api/items`;
 
-export default function Home() {
-  const [post, setPost] = React.useState(null);
+const Home = () => {
+  const [post, setPost] = useState(null);
 
-  React.useEffect(() => {
-    axios.get(baseURL).then(response => {
-      setPost(response.data);
+  useEffect(() => {
+    axios.get(baseURL).then(res => {
+      setPost(res.data);
     });
   }, []);
 
   return (
     <Container>
-      <Row xs={1} md={2} className='g-4'>
+      <Row xs={1} md={2} lg={3} className='g-4'>
         {post != null &&
           post.map(item => (
             <Col>
-              <Card key={item.id}>
-                <Card.Img variant='top' src='https://i.imgur.com/9KM8lMC.jpg' />
+              <Card key={item.id} style={{ width: '300px', height: '100%' }}>
+                {item.imageUrls[0] == null ? (
+                  <div
+                    style={{
+                      height: '200px',
+                      backgroundColor: 'grey'
+                    }}
+                  ></div>
+                ) : (
+                  <Card.Img
+                    variant='top'
+                    src={item.imageUrls[0]}
+                    style={{
+                      height: '200px'
+                    }}
+                  />
+                )}
                 <Card.Body>
                   <Card.Title>{item.name}</Card.Title>
                   <Card.Text>{item.description}</Card.Text>
@@ -33,12 +47,6 @@ export default function Home() {
                     <b>City: </b>
                     {item.city}
                   </ListGroupItem>
-                  <ListGroupItem>
-                    {' '}
-                    <b>Category: </b>
-                    {item.category}
-                  </ListGroupItem>
-                  <ListGroupItem>Vestibulum at eros</ListGroupItem>
                 </ListGroup>
                 <Card.Body>
                   <Link to={`/details/${item.id}`} className='btn btn-primary'>
@@ -51,4 +59,6 @@ export default function Home() {
       </Row>
     </Container>
   );
-}
+};
+
+export default Home;
