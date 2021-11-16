@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class WinnerPicker
+    public class Redeemer
     {
         private readonly ItemDbContext _context;
         
-        public WinnerPicker(ItemDbContext context)
+        public Redeemer(ItemDbContext context)
         {
             _context = context;
         }
@@ -26,5 +26,13 @@ namespace Services
             item.Redeemer = contributors[winnerIndex].User;
             await _context.SaveChangesAsync();
         }
+
+        public async Task SuspendItem(Guid ItemId)
+        {
+            var item = await _context.Items.FindAsync(ItemId);
+            item.IsSuspended = true;
+            await _context.SaveChangesAsync();
+        }
+        
     }
 }

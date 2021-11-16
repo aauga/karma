@@ -78,6 +78,17 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UnsuspendItem([FromRoute] Guid id)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new Edit.Command { Id = id , User = user});
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem([FromRoute] Guid id)
         {
@@ -115,7 +126,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] PointContributor winner)
         {
             var user = await GetUser();
-            await Mediator.Send(new ChooseWinner.Command { User = user, Winnner = winner, ItemId = id });
+            await Mediator.Send(new ChooseWinner.Command { User = user, Winner = winner, ItemId = id });
             return NoContent();
         }
     }

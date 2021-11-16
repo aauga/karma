@@ -27,13 +27,13 @@ namespace Application.Items.Commands
         {
             private readonly ItemDbContext _context;
             private readonly IImageUpload _imgUpload;
-            private readonly WinnerPicker _winnerPicker;
+            private readonly Redeemer redeemer;
             
-            public Handler(ItemDbContext context, IImageUpload imageUpload, WinnerPicker winnerPicker)
+            public Handler(ItemDbContext context, IImageUpload imageUpload, Redeemer winnerPicker)
             {
                 _imgUpload = imageUpload;
                 _context = context;
-                _winnerPicker = winnerPicker;
+                redeemer = winnerPicker;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -61,17 +61,17 @@ namespace Application.Items.Commands
 
                 var user = await _context.Users.FindAsync(request.User);
                 request.Item.Uploader = user.Username;
-                request.Item.isSuspended = false;
+                request.Item.IsSuspended = false;
 
                 await _context.Items.AddAsync(request.Item);
 
                 if(request.Item.WinnerChosenRandomly)
                 {
-                    BackgroundJob.Schedule(() => _winnerPicker.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
+                    BackgroundJob.Schedule(() => redeemer.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
                 }
                 else
                 {
-                    ///Schedule to suspend listing... Because poster didnt 
+                    BackgroundJob.Schedule(() => redeemer.SuspendItem(request.Item.Id), TimeSpan.FromDays(7)); ///Schedule item to be suspended after a week
                 }
 
                 await _context.SaveChangesAsync();

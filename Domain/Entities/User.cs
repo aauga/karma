@@ -13,7 +13,7 @@ namespace Domain.Entities
         public string Username { get; set; }
         public int KarmaPoints { get; set; }
         public List<Item> Listings { get; set; }
-        public List<PointContributor> Contributions { get; set; }
+        public List<Applicant> Contributions { get; set; }
         public bool isVerified { get; set; }
     }
 }

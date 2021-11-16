@@ -28,7 +28,7 @@ namespace Application.Items.Queries
 
             public async Task<IEnumerable<Item>> Handle(Query request, CancellationToken cancellationToken)
             {
-                List<Item> items = await _context.Items.ToListAsync(cancellationToken);
+                List<Item> items = await _context.Items.Where(s => !s.IsSuspended).ToListAsync(cancellationToken);
                 
                 foreach(Item item in items)
                 {

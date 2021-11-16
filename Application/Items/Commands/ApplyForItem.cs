@@ -15,13 +15,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Items.Commands
 {
-    public class ContributePoints
+    public class ApplyForItem
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
             public string User { get; set; }
-            public PointContributor Contributor { get; set; }
+            public Applicant Contributor { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -43,10 +43,6 @@ namespace Application.Items.Commands
                 if(user == null)
                 {
                     ///throw exception
-                }
-                if(user.KarmaPoints < request.Contributor.AmountOfPoints)
-                {
-                    ///Not enough points
                 }
                 request.Contributor.User = user.Username;
                 await _context.Contributors.AddAsync(request.Contributor);

@@ -1,4 +1,5 @@
 ﻿using Application.Users;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,6 +18,13 @@ namespace WebApi.Controllers
             var user = await GetUser();
             await Mediator.Send(new OnRegister.Command { User = user });
             return NoContent();
+        }
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult<List<PointContributor>>> GetUserContributions()
+        {
+            var user = await GetUser();
+            Media
         }
     }
 }

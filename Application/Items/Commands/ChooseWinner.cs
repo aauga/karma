@@ -28,7 +28,7 @@ namespace Application.Items.Commands
         {
             private readonly ItemDbContext _context;
 
-            public Handler(ItemDbContext context, IImageUpload imageUpload, WinnerPicker winnerPicker)
+            public Handler(ItemDbContext context, IImageUpload imageUpload, Redeemer winnerPicker)
             { 
                 _context = context;
             }
@@ -50,7 +50,7 @@ namespace Application.Items.Commands
                     ///Throw exception such contributor doesnt exist
                 }
                 item.Redeemer = winner.User;
-
+                item.IsSuspended = true;
                 ///Terminate suspension task
 
                 await _context.SaveChangesAsync();
