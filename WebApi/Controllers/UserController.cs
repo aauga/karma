@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("applications")]
         public async Task<ActionResult<List<Applicant>>> GetUserApplications()
         {
             var user = await GetUser();
@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("metadata")]
         public async Task<ActionResult<User>> GetUserMetaData()
         {
             var user = await GetUser();
