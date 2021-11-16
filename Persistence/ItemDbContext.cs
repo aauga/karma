@@ -18,5 +18,6 @@ namespace Persistence
         public DbSet<ListingImage> Images { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Applicant> Applicants { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
     }
 }
