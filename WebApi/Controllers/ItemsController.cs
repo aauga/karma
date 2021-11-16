@@ -18,7 +18,7 @@ namespace WebApi.Controllers
         {
             var items = await Mediator.Send(new List.Query());
 
-            if (items.Any() == false)
+            if (!items.Any())
             {
                 return NoContent();
             }

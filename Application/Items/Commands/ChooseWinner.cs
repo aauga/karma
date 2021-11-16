@@ -36,7 +36,7 @@ namespace Application.Items.Commands
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.ItemId);
-                var winner = await _context.Contributors.FindAsync(request.Winner.User);
+                var winner = await _context.Applicants.FindAsync(request.Winner.User);
                 if(item.Uploader != request.User)
                 {
                     ///throw exception trying to choose winner for another user

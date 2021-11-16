@@ -45,7 +45,7 @@ namespace Application.Items.Commands
                     ///throw exception
                 }
                 request.Contributor.User = user.Username;
-                await _context.Contributors.AddAsync(request.Contributor);
+                await _context.Applicants.AddAsync(request.Contributor);
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;

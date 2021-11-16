@@ -19,6 +19,27 @@ namespace Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Domain.Entities.Applicant", b =>
+                {
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Reasoning")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("User");
+
+                    b.HasIndex("Username");
+
+                    b.ToTable("Applicants");
+                });
+
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
@@ -34,6 +55,12 @@ namespace Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSuspended")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -45,6 +72,9 @@ namespace Persistence.Migrations
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("WinnerChosenRandomly")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -66,27 +96,6 @@ namespace Persistence.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PointContributor", b =>
-                {
-                    b.Property<string>("User")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AmountOfPoints")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Reasoning")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("User");
-
-                    b.HasIndex("Username");
-
-                    b.ToTable("Contributors");
-                });
-
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Property<string>("Username")
@@ -103,17 +112,17 @@ namespace Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Applicant", b =>
+                {
+                    b.HasOne("Domain.Entities.User", null)
+                        .WithMany("Contributions")
+                        .HasForeignKey("Username");
+                });
+
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.HasOne("Domain.Entities.User", null)
                         .WithMany("Listings")
-                        .HasForeignKey("Username");
-                });
-
-            modelBuilder.Entity("Domain.Entities.PointContributor", b =>
-                {
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithMany("Contributions")
                         .HasForeignKey("Username");
                 });
 
