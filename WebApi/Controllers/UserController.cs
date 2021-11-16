@@ -1,4 +1,5 @@
-﻿using Application.Users;
+﻿using Application.Items.Queries;
+using Application.Users;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,25 @@ namespace WebApi.Controllers
             await Mediator.Send(new OnRegister.Command { User = user });
             return NoContent();
         }
+
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult<List<PointContributor>>> GetUserContributions()
+        public async Task<ActionResult<List<Applicant>>> GetUserApplications()
         {
             var user = await GetUser();
-            Media
+            var applications = await Mediator.Send(new GetUserApplications.Query { User = user });
+            return Ok(applications);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<User>> GetUserMetaData()
+        {
+            var user = await GetUser();
+            var metadata = await Mediator.Send(new GetUserMetadata.Query { User = user });
+            return Ok(metadata);
+        }
+
     }
+
 }

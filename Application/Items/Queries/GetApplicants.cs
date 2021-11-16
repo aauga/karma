@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Application.Items.Queries
 {
-    public class GetContributors
+    public class GetApplicants
     {
-        public class Query : IRequest<IEnumerable<PointContributor>>
+        public class Query : IRequest<IEnumerable<Applicant>>
         {
             public Guid ItemId { get; set; }
             public String User { get; set; }
         }
-        public class Handler : IRequestHandler<Query, IEnumerable<PointContributor>>
+        public class Handler : IRequestHandler<Query, IEnumerable<Applicant>>
         {
             private readonly ItemDbContext _context;
             
@@ -28,7 +28,7 @@ namespace Application.Items.Queries
                 _context = context;
             }
 
-            public async Task<IEnumerable<PointContributor>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IEnumerable<Applicant>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.ItemId);
                 if(item.Uploader != request.User)

@@ -12,20 +12,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Items.Queries
 {
-    public class GetUserContributions
+    public class GetUserApplications
     {
-        public class Query : IRequest<List<PointContributor>>
+        public class Query : IRequest<List<Applicant>>
         {
             public string User { get; set; }
         }
-        public class Handler : IRequestHandler<Query, List<PointContributor>>
+        public class Handler : IRequestHandler<Query, List<Applicant>>
         {
             private readonly ItemDbContext _context;
             public Handler(ItemDbContext context)
             {
                 _context = context;
             }
-            public async Task<List<PointContributor>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<Applicant>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var contributions = await _context.Contributors.Where(s => s.User == request.User).ToListAsync();
 

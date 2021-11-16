@@ -20,7 +20,7 @@ namespace Services
         public async Task ChooseWinner(Guid ItemId)
         {
             var rand = new Random();
-            List<PointContributor> contributors = _context.Contributors.Where(s => s.ListingId == ItemId).ToList();
+            List<Applicant> contributors = _context.Contributors.Where(s => s.ListingId == ItemId).ToList();
             int winnerIndex = rand.Next(0, contributors.Count);
             var item = await _context.Items.FindAsync(ItemId);
             item.Redeemer = contributors[winnerIndex].User;

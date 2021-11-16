@@ -95,7 +95,7 @@ namespace WebApi
 
             services.AddHangfireServer();
 
-            services.AddScoped<WinnerPicker>();
+            services.AddScoped<Redeemer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

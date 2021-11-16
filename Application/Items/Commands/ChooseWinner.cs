@@ -22,7 +22,7 @@ namespace Application.Items.Commands
         {
             public String User { get; set; }
             public Guid ItemId { get; set; }
-            public PointContributor Winner { get; set; }
+            public Applicant Winner { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -51,7 +51,7 @@ namespace Application.Items.Commands
                 }
                 item.Redeemer = winner.User;
                 item.IsSuspended = true;
-                ///Terminate suspension task
+                ///Terminate suspension  task
 
                 await _context.SaveChangesAsync();
 
