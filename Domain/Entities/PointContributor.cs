@@ -14,7 +14,7 @@ namespace Domain.Entities
         [ForeignKey("User")]
         public string User { get; set; }
         [ForeignKey("Item")]
-        public guid ListingId { get; set; }
+        public Guid ListingId { get; set; }
         public int AmountOfPoints { get; set; }
         public string Reasoning { get; set; }
 

@@ -26,6 +26,15 @@ namespace WebApi.Controllers
             return Ok(items);
         }
 
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<PointContributor>>> GetContributors([FromRoute] Guid id)
+        {
+            var user = await GetUser();
+            var contributors = await Mediator.Send(new GetContributors.Query { ItemId = id , User = user});
+            return Ok(contributors);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Item>> GetItem([FromRoute] Guid id)
         {
@@ -98,6 +107,15 @@ namespace WebApi.Controllers
 
             await Mediator.Send(new ContributePoints.Command { User = user, Id = id, Contributor = pointContributor });
 
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("{id}")]
+        public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] PointContributor winner)
+        {
+            var user = await GetUser();
+            await Mediator.Send(new ChooseWinner.Command { User = user, Winnner = winner, ItemId = id });
             return NoContent();
         }
     }

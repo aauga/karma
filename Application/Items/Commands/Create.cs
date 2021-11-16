@@ -29,10 +29,11 @@ namespace Application.Items.Commands
             private readonly IImageUpload _imgUpload;
             private readonly WinnerPicker _winnerPicker;
             
-            public Handler(ItemDbContext context, IImageUpload imageUpload)
+            public Handler(ItemDbContext context, IImageUpload imageUpload, WinnerPicker winnerPicker)
             {
                 _imgUpload = imageUpload;
                 _context = context;
+                _winnerPicker = winnerPicker;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -60,10 +61,18 @@ namespace Application.Items.Commands
 
                 var user = await _context.Users.FindAsync(request.User);
                 request.Item.Uploader = user.Username;
-                
+                request.Item.isSuspended = false;
+
                 await _context.Items.AddAsync(request.Item);
 
-                BackgroundJob.Schedule(() => _winnerPicker.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
+                if(request.Item.WinnerChosenRandomly)
+                {
+                    BackgroundJob.Schedule(() => _winnerPicker.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
+                }
+                else
+                {
+                    ///Schedule to suspend listing... Because poster didnt 
+                }
 
                 await _context.SaveChangesAsync();
                 

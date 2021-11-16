@@ -14,6 +14,8 @@ namespace Domain.Entities
         public ItemCategories Category { get; set; }
         public string City { get; set; }
         public DateTime ExpirationDate { get; set; }
+        public bool WinnerChosenRandomly { get; set; }
+        public bool IsSuspended { get; set; }
         [NotMapped]
         public List<IFormFile> PostedFiles { get; set; }
         [NotMapped]

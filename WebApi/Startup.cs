@@ -77,7 +77,7 @@ namespace WebApi
             Account account = new Account(_configuration["Cloudinary:Name"], _configuration["Cloudinary:ApiKey"], _configuration["Cloudinary:ApiSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
             cloudinary.Api.Secure = true;
-            services.AddSingleton<IImageUpload>(s => new ImageUpload(cloudinary));
+            services.AddSingleton<IImageUpload, ImageUpload>(_ => new ImageUpload(cloudinary));
 
 
             services.AddHangfire(configuration => configuration
