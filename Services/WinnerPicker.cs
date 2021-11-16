@@ -11,6 +11,12 @@ namespace Services
     public class WinnerPicker
     {
         private readonly ItemDbContext _context;
+        
+        public WinnerPicker(ItemDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task ChooseWinner(Guid ItemId)
         {
             var rand = new Random();
