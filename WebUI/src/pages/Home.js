@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, ListGroup, ListGroupItem } from 'react-boots
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Hero from '../components/Hero';
+import LikedCount from '../components/LikedCount';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const baseURL = `${serverUrl}/api/items`;
@@ -23,7 +24,6 @@ const Home = () => {
         {post != null &&
           post.map(item => (
             <Col>
-              <Link to={`/details/${item.id}`} className='streched-link'></Link>
               <Card key={item.id} style={{ width: '100%', height: '100%' }}>
                 {item.imageUrls[0] == null ? (
                   <div
@@ -41,9 +41,10 @@ const Home = () => {
                     }}
                   />
                 )}
-                <Card.Body>
+                <Card.Body className='position-relative'>
                   <Card.Title>{item.name}</Card.Title>
                   <Card.Text>{item.description}</Card.Text>
+                  <LikedCount />
                 </Card.Body>
                 <ListGroup className='list-group-flush'>
                   <ListGroupItem>
