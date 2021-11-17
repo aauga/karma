@@ -18,12 +18,21 @@ namespace WebApi.Controllers
         {
             var items = await Mediator.Send(new List.Query());
 
-            if (items.Any() == false)
+            if (!items.Any())
             {
                 return NoContent();
             }
 
             return Ok(items);
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<Applicant>>> GetContributors([FromRoute] Guid id)
+        {
+            var user = await GetUser();
+            var contributors = await Mediator.Send(new GetApplicants.Query { ItemId = id , User = user});
+            return Ok(contributors);
         }
 
         [HttpGet("{id}")]
@@ -69,6 +78,17 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UnsuspendItem([FromRoute] Guid id)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new Edit.Command { Id = id , User = user});
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem([FromRoute] Guid id)
         {
@@ -92,12 +112,21 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost("{id}")]
-        public async Task<IActionResult> ContributePoints ([FromRoute] Guid id,[FromBody] PointContributor pointContributor)
+        public async Task<IActionResult> ContributePoints ([FromRoute] Guid id,[FromBody] Applicant pointContributor)
         {
             var user = await GetUser();
 
-            await Mediator.Send(new ContributePoints.Command { User = user, Id = id, Contributor = pointContributor });
+            await Mediator.Send(new ApplyForItem.Command { User = user, Id = id, Contributor = pointContributor });
 
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("{id}")]
+        public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] Applicant winner)
+        {
+            var user = await GetUser();
+            await Mediator.Send(new ChooseWinner.Command { User = user, Winner = winner, ItemId = id });
             return NoContent();
         }
     }

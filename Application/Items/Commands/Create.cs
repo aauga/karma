@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Application.Core;
 using Application.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Hangfire;
 
 namespace Application.Items.Commands
 {
@@ -26,11 +27,13 @@ namespace Application.Items.Commands
         {
             private readonly ItemDbContext _context;
             private readonly IImageUpload _imgUpload;
+            private readonly Redeemer redeemer;
             
-            public Handler(ItemDbContext context, IImageUpload imageUpload)
+            public Handler(ItemDbContext context, IImageUpload imageUpload, Redeemer winnerPicker)
             {
                 _imgUpload = imageUpload;
                 _context = context;
+                redeemer = winnerPicker;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -58,9 +61,19 @@ namespace Application.Items.Commands
 
                 var user = await _context.Users.FindAsync(request.User);
                 request.Item.Uploader = user.Username;
-                
+                request.Item.IsSuspended = false;
+
                 await _context.Items.AddAsync(request.Item);
-                
+
+                if(request.Item.WinnerChosenRandomly)
+                {
+                    BackgroundJob.Schedule(() => redeemer.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
+                }
+                else
+                {
+                    BackgroundJob.Schedule(() => redeemer.SuspendItem(request.Item.Id), TimeSpan.FromDays(7)); ///Schedule item to be suspended after a week
+                }
+
                 await _context.SaveChangesAsync();
                 
                 return Unit.Value;

@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class PointContributor
+    public class Applicant
     {
         [Key]
         [ForeignKey("User")]
         public string User { get; set; }
-        public int AmountOfPoints { get; set; }
+        [ForeignKey("Item")]
+        public Guid ListingId { get; set; }
         public string Reasoning { get; set; }
 
     }
