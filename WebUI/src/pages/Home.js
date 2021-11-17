@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Hero from '../components/Hero';
+import LikedCount from '../components/LikedCount';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const baseURL = `${serverUrl}/api/items`;
@@ -17,11 +19,12 @@ const Home = () => {
 
   return (
     <Container>
+      <Hero />
       <Row xs={1} md={2} lg={3} className='g-4'>
         {post != null &&
           post.map(item => (
             <Col>
-              <Card key={item.id} style={{ width: '300px', height: '100%' }}>
+              <Card key={item.id} style={{ width: '100%', height: '100%' }}>
                 {item.imageUrls[0] == null ? (
                   <div
                     style={{
@@ -38,21 +41,29 @@ const Home = () => {
                     }}
                   />
                 )}
-                <Card.Body>
+                <Card.Body className='position-relative'>
                   <Card.Title>{item.name}</Card.Title>
                   <Card.Text>{item.description}</Card.Text>
+                  <LikedCount />
                 </Card.Body>
                 <ListGroup className='list-group-flush'>
                   <ListGroupItem>
-                    <b>City: </b>
-                    {item.city}
+                    <b>City: </b> Vilnius
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <b>Category: </b> Furniture
                   </ListGroupItem>
                 </ListGroup>
                 <Card.Body>
-                  <Link to={`/details/${item.id}`} className='btn btn-primary'>
-                    Go to
+                  <Link to={`/details/${item.id}`} className='btn btn-primary stretched-link'>
+                    Visit
                   </Link>
                 </Card.Body>
+                <Card.Footer>
+                  <Card.Text>
+                    <small class='text-muted'>Last updated 3 mins ago</small>
+                  </Card.Text>
+                </Card.Footer>
               </Card>
             </Col>
           ))}

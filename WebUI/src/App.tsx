@@ -9,7 +9,7 @@ import Profile from './pages/Profile';
 import { useAuth0 } from '@auth0/auth0-react';
 import Loading from './components/loading';
 import ProtectedRoute from './auth/protected-route';
-import AddListing from './pages/AddListing.tsx';
+import AddListing from './pages/AddListing';
 import ItemDetails from './components/ItemDetails';
 
 function App() {
