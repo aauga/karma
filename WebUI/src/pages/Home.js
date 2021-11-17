@@ -49,11 +49,9 @@ const Home = () => {
                 <ListGroup className='list-group-flush'>
                   <ListGroupItem>
                     <b>City: </b> Vilnius
-                    {/* {item.city} */}
                   </ListGroupItem>
                   <ListGroupItem>
                     <b>Category: </b> Furniture
-                    {/* {item.city} */}
                   </ListGroupItem>
                 </ListGroup>
                 <Card.Body>
