@@ -42,7 +42,7 @@ namespace Application.Items.Commands
 
                 if(ratings.Count() != 0)
                 {
-                    ///user evaluated this item already
+                    ///user already rated this item
                 }
                 if (item == null)
                 {
