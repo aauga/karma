@@ -38,7 +38,12 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
+                var ratings = await _context.Ratings.Where(s => s.ItemId == item.Id && s.User == user.Username).ToListAsync();
 
+                if(ratings.Count() != 0)
+                {
+                    ///user evaluated this item already
+                }
                 if (item == null)
                 {
                     ///throw exception
