@@ -67,6 +67,17 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RateItem([FromRoute] Guid id ,[FromForm] Rating Rating)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new RateItem.Command {Id = id , Rating = Rating , User = user });
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditItem([FromRoute] Guid id, [FromForm] Item item)
         {
