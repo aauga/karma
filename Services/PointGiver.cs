@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class PointGiver : IPointGiver
+    public class PointGiver
     {
         private readonly ItemDbContext _context;
 

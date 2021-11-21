@@ -97,7 +97,7 @@ namespace WebApi
 
             services.AddScoped<Redeemer>();
 
-            services.AddScoped<IPointGiver, PointGiver>();
+            services.AddScoped<PointGiver>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
