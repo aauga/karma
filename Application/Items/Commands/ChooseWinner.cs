@@ -37,6 +37,7 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.ItemId);
                 var winner = await _context.Applicants.FindAsync(request.Winner.User);
+
                 if(item.Uploader != request.User)
                 {
                     ///throw exception trying to choose winner for another user
@@ -51,7 +52,7 @@ namespace Application.Items.Commands
                 }
                 item.Redeemer = winner.User;
                 item.IsSuspended = true;
-                ///Terminate suspension  task
+                
 
                 await _context.SaveChangesAsync();
 

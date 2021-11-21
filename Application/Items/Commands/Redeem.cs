@@ -29,9 +29,20 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
+
                 if (item == null)
                 {
                     throw new NotFoundException(nameof(Item), request.Id);
+                }
+                   
+                if(item.IsSuspended)
+                {
+                    ///Item is suspended
+                }
+
+                if(item.IsRecieved)
+                {
+                    ///Item already redeemed
                 }
 
                 if (item.Redeemer != null)

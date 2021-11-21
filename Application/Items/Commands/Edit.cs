@@ -40,7 +40,14 @@ namespace Application.Items.Commands
                 {
                     throw new NotFoundException(nameof(Item), request.Id);
                 }
-
+                if(item.IsRecieved)
+                {
+                    /// Item already redeemed
+                }
+                if(item.IsSuspended)
+                {
+                    /// Item is suspended
+                }
                 if (item.Uploader != user.Username)
                 {
                     throw new ConflictException($"Item {request.Id} does not belong to the client");
