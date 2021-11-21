@@ -1,49 +1,58 @@
 ﻿using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Exceptions;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Items.Commands
 {
-    public class UnsuspendItem
+    public class ConfirmRecieving
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public string User { get; set; }
+            public string User { get; set; } 
         }
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
+                private readonly PointGiver _pointGiver;
 
-            public Handler(ItemDbContext context)
+            public Handler(ItemDbContext context , PointGiver pointGiver)
             {
                 _context = context;
+                _pointGiver = pointGiver;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.Id);
-                if(item.Uploader != request.User)
-                {
-                    ///throw exception not uploader
-                }
+                var user = await _context.Users.FindAsync(request.User);
                 if (item == null)
                 {
-                    throw new NotFoundException(nameof(Item), request.Id);
+                    ///throw exception
                 }
-                if(!item.IsRecieved)
+                if (user == null)
                 {
-                    ///Item already recieved
+                    ///throw exception
+                }
+                if(user.Username != item.Redeemer)
+                {
+                    ///Not the person trying to redeem the item
                 }
 
-                item.IsSuspended = false;
+                item.IsRecieved = true;
+                _pointGiver.GivePointsOnRedemption(item.Uploader, item.Id);
+
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;

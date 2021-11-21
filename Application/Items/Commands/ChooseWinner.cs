@@ -28,7 +28,7 @@ namespace Application.Items.Commands
         {
             private readonly ItemDbContext _context;
 
-            public Handler(ItemDbContext context, IImageUpload imageUpload, Redeemer winnerPicker)
+            public Handler(ItemDbContext context)
             { 
                 _context = context;
             }

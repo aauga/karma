@@ -11,8 +11,9 @@ namespace Services
     public class Redeemer
     {
         private readonly ItemDbContext _context;
-        
-        public Redeemer(ItemDbContext context)
+        private readonly PointGiver _pointGiver;
+
+        public Redeemer(ItemDbContext context , PointGiver pointGiver)
         {
             _context = context;
         }
