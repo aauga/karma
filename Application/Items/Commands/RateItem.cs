@@ -26,10 +26,12 @@ namespace Application.Items.Commands
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
+            private readonly PointGiver _pointGiver;
 
-            public Handler(ItemDbContext context, IImageUpload imageUpload)
+            public Handler(ItemDbContext context , PointGiver pointGiver)
             {
                 _context = context;
+                _pointGiver = pointGiver;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -50,6 +52,8 @@ namespace Application.Items.Commands
                 request.Rating.User = user.Username;
                 await _context.Ratings.AddAsync(request.Rating);
                 await _context.SaveChangesAsync();
+
+                await _pointGiver.GivePoints(user.Username, 1);
 
                 return Unit.Value;
             }
