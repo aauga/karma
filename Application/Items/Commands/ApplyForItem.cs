@@ -21,7 +21,7 @@ namespace Application.Items.Commands
         {
             public Guid Id { get; set; }
             public string User { get; set; }
-            public Applicant Contributor { get; set; }
+            public Applicant Applicant { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -36,6 +36,7 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
+                
                 if(item == null)
                 {
                     ///throw exception
@@ -44,8 +45,15 @@ namespace Application.Items.Commands
                 {
                     ///throw exception
                 }
-                request.Contributor.User = user.Username;
-                await _context.Applicants.AddAsync(request.Contributor);
+
+                var applied = await _context.Applicants.Where(s => s.User == request.Applicant.User).Where(s => s.ListingId == request.Applicant.ListingId).FirstAsync();
+                if (applied != null)
+                {
+                    ///Already applied for this item
+                }
+
+                request.Applicant.User = user.Username;
+                await _context.Applicants.AddAsync(request.Applicant);
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;

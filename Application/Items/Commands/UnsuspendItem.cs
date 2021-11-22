@@ -30,17 +30,22 @@ namespace Application.Items.Commands
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.Id);
-                if(item.Uploader != request.User)
-                {
-                    ///throw exception not uploader
-                }
+              
                 if (item == null)
                 {
                     throw new NotFoundException(nameof(Item), request.Id);
                 }
-                if(!item.IsRecieved)
+                if (item.Uploader != request.User)
+                {
+                    ///throw exception not uploader
+                }
+                if (!item.IsRecieved)
                 {
                     ///Item already recieved
+                }
+                if(request.User != item.Uploader)
+                {
+                    ///Trying to unsuspend different users listing
                 }
 
                 item.IsSuspended = false;

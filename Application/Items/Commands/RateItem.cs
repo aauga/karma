@@ -38,12 +38,7 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
-                var ratings = await _context.Ratings.Where(s => s.ItemId == item.Id && s.User == user.Username).ToListAsync();
 
-                if(ratings.Count() != 0)
-                {
-                    ///user already rated this item
-                }
                 if (item == null)
                 {
                     ///throw exception
@@ -51,6 +46,16 @@ namespace Application.Items.Commands
                 if (user == null)
                 {
                     ///throw exception
+                }
+
+                var ratings = await _context.Ratings.Where(s => s.ItemId == item.Id && s.User == user.Username).ToListAsync();
+                if (ratings.Count() != 0)
+                {
+                    ///user already rated this item
+                }
+                if (user.Username == item.Uploader)
+                {
+                    ///User trying to rate his own item
                 }
 
                 request.Rating.ItemId = item.Id;

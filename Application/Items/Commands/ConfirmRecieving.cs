@@ -37,6 +37,8 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
+
+
                 if (item == null)
                 {
                     ///throw exception
@@ -44,6 +46,10 @@ namespace Application.Items.Commands
                 if (user == null)
                 {
                     ///throw exception
+                }
+                if(item.IsRecieved)
+                {
+                    ///Item already recieved
                 }
                 if(user.Username != item.Redeemer)
                 {

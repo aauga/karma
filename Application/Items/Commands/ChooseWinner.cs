@@ -38,7 +38,32 @@ namespace Application.Items.Commands
                 var item = await _context.Items.FindAsync(request.ItemId);
                 var winner = await _context.Applicants.FindAsync(request.Winner.User);
 
-                if(item.Uploader != request.User)
+                if (item == null)
+                {
+                    throw new NotFoundException(nameof(Item), request.ItemId);
+                }
+                if (!request.Winner.Equals(winner))
+                {
+                    ///Throw exception such contributor doesnt exist
+                }
+                if (item.IsSuspended)
+                {
+                    ///Item is suspended
+                }
+
+                if (item.IsRecieved)
+                {
+                    ///Item already redeemed
+                }
+                if (item.Redeemer != null)
+                {
+                    throw new ConflictException($"Item {request.ItemId} has already been redeemed");
+                }
+                if(winner.User == request.User)
+                {
+                    ///Cant win your own item
+                }
+                if (item.Uploader != request.User)
                 {
                     ///throw exception trying to choose winner for another user
                 }
@@ -46,14 +71,10 @@ namespace Application.Items.Commands
                 {
                     ///Throw exception winner should be chosen randomly
                 }
-                if(!request.Winner.Equals(winner))
-                {
-                    ///Throw exception such contributor doesnt exist
-                }
+                
                 item.Redeemer = winner.User;
                 item.IsSuspended = true;
                 
-
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;

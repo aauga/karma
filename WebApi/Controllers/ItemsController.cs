@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("contributors/{id}")]
         public async Task<ActionResult<IEnumerable<Applicant>>> GetContributors([FromRoute] Guid id)
         {
             var user = await GetUser();
@@ -67,7 +67,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("rate/{id}")]
         public async Task<IActionResult> RateItem([FromRoute] Guid id ,[FromForm] Rating Rating)
         {
             var user = await GetUser();
@@ -89,7 +89,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
+        [HttpPut("unsuspend/{id}")]
         public async Task<IActionResult> UnsuspendItem([FromRoute] Guid id)
         {
             var user = await GetUser();
@@ -111,29 +111,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("redeem/{id}")]
-        public async Task<IActionResult> RedeemItem([FromRoute] Guid id)
-        {
-            var user = await GetUser();
-
-            await Mediator.Send(new Redeem.Command { Id = id, User = user });
-            
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("{id}")]
-        public async Task<IActionResult> ContributePoints ([FromRoute] Guid id,[FromBody] Applicant pointContributor)
-        {
-            var user = await GetUser();
-
-            await Mediator.Send(new ApplyForItem.Command { User = user, Id = id, Contributor = pointContributor });
-
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("{id}")]
+        [HttpPost("winner/{id}")]
         public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] Applicant winner)
         {
             var user = await GetUser();
