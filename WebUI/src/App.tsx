@@ -1,9 +1,4 @@
-import './App.css';
-import { Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import Header from './components/Header';
+import { Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -11,8 +6,11 @@ import Loading from './components/loading';
 import ProtectedRoute from './auth/protected-route';
 import AddListing from './pages/AddListing';
 import ItemDetails from './components/ItemDetails';
+import Header from './components/Header';
+import Navbar from './components/Navbar';
+import './global.css';
 
-function App() {
+const App = () => {
   const { isLoading } = useAuth0();
 
   if (isLoading) {
@@ -22,6 +20,7 @@ function App() {
   return (
     <div id='app' className='d-flex flex-column h-100'>
       <Header />
+      <Navbar />
       <Switch>
         <Route path='/' exact component={Home} />
         <Route path='/details/:id' exact component={ItemDetails} />
@@ -30,6 +29,6 @@ function App() {
       </Switch>
     </div>
   );
-}
+};
 
 export default App;
