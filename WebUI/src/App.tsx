@@ -11,6 +11,7 @@ import Loading from './components/loading';
 import ProtectedRoute from './auth/protected-route';
 import AddListing from './pages/AddListing';
 import ItemDetails from './components/ItemDetails';
+import Navbar from './components/Navbar';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -21,7 +22,7 @@ function App() {
 
   return (
     <div id='app' className='d-flex flex-column h-100'>
-      <Header />
+      <Navbar />
       <Switch>
         <Route path='/' exact component={Home} />
         <Route path='/details/:id' exact component={ItemDetails} />
