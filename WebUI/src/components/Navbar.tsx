@@ -67,7 +67,7 @@ const NavigationBar = () => {
     <StyledNavbar expand='lg' variant='light'>
       <Container>
         <StyledNavbar.Brand href='#home'>
-          <img src={logo} width='40' height='40' alt='logo' />
+          <img src={logo} alt='logo' />
         </StyledNavbar.Brand>
         <StyledToggle aria-controls='responsive-navbar-nav' />
         <StyledCollapse id='responsive-navbar-nav'>
