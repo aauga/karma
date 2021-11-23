@@ -1,4 +1,6 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.svg';
 import AuthenticationButton from './authentication-button';
@@ -57,8 +59,8 @@ const StyledNavLink = styled(Nav.Link)`
 `;
 
 
-
 const NavigationBar = () => {
+  const { isAuthenticated } = useAuth0();
   return (
     <StyledNavbar expand='lg' variant='light'>
       <Container>
@@ -68,8 +70,25 @@ const NavigationBar = () => {
         <StyledToggle aria-controls='responsive-navbar-nav' />
         <StyledCollapse id='responsive-navbar-nav'>
           <Nav id='nav-left' className='me-auto'>
-            <StyledNavLink href='#features'>Features</StyledNavLink>
-            <StyledNavLink href='#pricing'>Pricing</StyledNavLink>
+            <StyledNavLink>
+            <Link to='/' className='nav-link'>
+              Home
+            </Link>
+            </StyledNavLink>
+            {isAuthenticated && (
+              <StyledNavLink>
+                <Link to='/profile' className='nav-link'>
+                  Profile
+                </Link>
+              </StyledNavLink>
+            )}
+            {isAuthenticated && (
+              <StyledNavLink>
+                <Link to='/addlisting' className='nav-link'>
+                  Add Listing
+                </Link>
+              </StyledNavLink>
+            )}
           </Nav>
           <Nav id='nav-right'>
             {/* <SignInBtn>Sign In</SignInBtn>

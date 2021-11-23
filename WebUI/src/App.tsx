@@ -19,7 +19,7 @@ const App = () => {
 
   return (
     <div id='app' className='d-flex flex-column h-100'>
-      <Header />
+      {/* <Header /> */}
       <Navbar />
       <Switch>
         <Route path='/' exact component={Home} />
