@@ -45,6 +45,7 @@ const StyledCollapse = styled(Navbar.Collapse)`
 `;
 
 const StyledNavLink = styled(Nav.Link)`
+  padding: 0 8px;
   margin-right: 8px;
 
   &:hover {
@@ -54,10 +55,9 @@ const StyledNavLink = styled(Nav.Link)`
 
   @media (max-width: 992px) {
     margin: 4px 0;
-    padding-left: 16px !important;
+    padding: 0 16px !important;
   }
 `;
-
 
 const NavigationBar = () => {
   const { isAuthenticated } = useAuth0();
@@ -71,9 +71,9 @@ const NavigationBar = () => {
         <StyledCollapse id='responsive-navbar-nav'>
           <Nav id='nav-left' className='me-auto'>
             <StyledNavLink>
-            <Link to='/' className='nav-link'>
-              Home
-            </Link>
+              <Link to='/' className='nav-link'>
+                Home
+              </Link>
             </StyledNavLink>
             {isAuthenticated && (
               <StyledNavLink>
@@ -93,7 +93,7 @@ const NavigationBar = () => {
           <Nav id='nav-right'>
             {/* <SignInBtn>Sign In</SignInBtn>
              */}
-             <AuthenticationButton />
+            <AuthenticationButton />
           </Nav>
         </StyledCollapse>
       </Container>
