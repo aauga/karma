@@ -1,9 +1,4 @@
-import './App.css';
-import { Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import Header from './components/Header';
+import { Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -12,8 +7,9 @@ import ProtectedRoute from './auth/protected-route';
 import AddListing from './pages/AddListing';
 import ItemDetails from './components/ItemDetails';
 import Navbar from './components/Navbar';
+import './global.css';
 
-function App() {
+const App = () => {
   const { isLoading } = useAuth0();
 
   if (isLoading) {
@@ -31,6 +27,6 @@ function App() {
       </Switch>
     </div>
   );
-}
+};
 
 export default App;
