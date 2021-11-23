@@ -1,6 +1,7 @@
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import logo from '../logo.svg';
+import AuthenticationButton from './authentication-button';
 
 const StyledNavbar = styled(Navbar)`
   border: 0;
@@ -55,12 +56,7 @@ const StyledNavLink = styled(Nav.Link)`
   }
 `;
 
-const SignInBtn = styled(Button)`
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  padding: 8px 16px;
-`;
+
 
 const NavigationBar = () => {
   return (
@@ -76,7 +72,9 @@ const NavigationBar = () => {
             <StyledNavLink href='#pricing'>Pricing</StyledNavLink>
           </Nav>
           <Nav id='nav-right'>
-            <SignInBtn>Sign In</SignInBtn>
+            {/* <SignInBtn>Sign In</SignInBtn>
+             */}
+             <AuthenticationButton />
           </Nav>
         </StyledCollapse>
       </Container>
