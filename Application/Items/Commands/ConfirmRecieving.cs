@@ -57,7 +57,7 @@ namespace Application.Items.Commands
                 }
 
                 item.IsRecieved = true;
-                _pointGiver.GivePointsOnRedemption(item.Uploader, item.Id);
+                await _pointGiver.GivePointsOnRedemption(item.Uploader, item.Id);
 
                 await _context.SaveChangesAsync();
 

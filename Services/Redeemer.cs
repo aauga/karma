@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,11 @@ namespace Services
             _context = context;
         }
 
-        public async Task ChooseWinner(Guid ItemId)
+        public async Task ChooseWinnerRandomly(Guid ItemId)
         {
             var rand = new Random();
-            List<Applicant> contributors = _context.Applicants.Where(s => s.ListingId == ItemId).ToList();
-            int winnerIndex = rand.Next(0, contributors.Count);
+            var contributors = await _context.Applicants.Where(s => s.ListingId == ItemId).ToListAsync();
+            int winnerIndex = rand.Next(0, contributors.Count-1);
             var item = await _context.Items.FindAsync(ItemId);
             item.Redeemer = contributors[winnerIndex].User;
             await _context.SaveChangesAsync();

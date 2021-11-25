@@ -67,7 +67,7 @@ namespace Application.Items.Commands
 
                 if(request.Item.WinnerChosenRandomly)
                 {
-                    BackgroundJob.Schedule(() => redeemer.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
+                    BackgroundJob.Schedule(() => redeemer.ChooseWinnerRandomly(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
                 }
                 else
                 {
