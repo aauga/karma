@@ -41,21 +41,21 @@ namespace Application.Items.Commands
 
                 if (item == null)
                 {
-                    ///throw exception
+                    throw new NotFoundException($"Item {request.Id} does not exist");
                 }
                 if (user == null)
                 {
-                    ///throw exception
+                    throw new NotFoundException($"User {request.User} does not exist");
                 }
 
                 var ratings = await _context.Ratings.Where(s => s.ItemId == item.Id && s.User == user.Username).ToListAsync();
                 if (ratings.Count() != 0)
                 {
-                    ///user already rated this item
+                    throw new ConflictException($"User {user.Username} already rated this item");
                 }
                 if (user.Username == item.Uploader)
                 {
-                    ///User trying to rate his own item
+                    throw new ConflictException($"User {user.Username} trying to rate his own item");
                 }
 
                 request.Rating.ItemId = item.Id;

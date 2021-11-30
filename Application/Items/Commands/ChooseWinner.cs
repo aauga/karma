@@ -40,36 +40,36 @@ namespace Application.Items.Commands
 
                 if (item == null)
                 {
-                    throw new NotFoundException(nameof(Item), request.ItemId);
+                    throw new NotFoundException($"Item {request.ItemId} does not exist");
                 }
                 if (!request.Winner.Equals(winner))
                 {
-                    ///Throw exception such contributor doesnt exist
+                    throw new NotFoundException($"Contributor {request.Winner.User} does not exist");
                 }
                 if (item.IsSuspended)
                 {
-                    ///Item is suspended
+                    throw new ConflictException($"Item {request.ItemId} is suspended");
                 }
 
                 if (item.IsRecieved)
                 {
-                    ///Item already redeemed
+                    throw new ConflictException($"Item {request.ItemId} has already been recieved");
                 }
                 if (item.Redeemer != null)
                 {
-                    throw new ConflictException($"Item {request.ItemId} has already been redeemed");
+                    throw new ConflictException($"Item {request.ItemId} is suspended");
                 }
                 if(winner.User == request.User)
                 {
-                    ///Cant win your own item
+                    throw new ConflictException($"Cant win your own item");
                 }
                 if (item.Uploader != request.User)
                 {
-                    ///throw exception trying to choose winner for another user
+                    throw new ConflictException($"User is not the uploader of item");
                 }
                 if(item.WinnerChosenRandomly)
                 {
-                    ///Throw exception winner should be chosen randomly
+                    throw new ConflictException($"Items {request.ItemId} winner will be chosen randomly");
                 }
                 
                 item.Redeemer = winner.User;

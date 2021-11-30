@@ -37,15 +37,11 @@ namespace Application.Items.Commands
                 }
                 if (item.Uploader != request.User)
                 {
-                    ///throw exception not uploader
+                    throw new ConflictException($"User {request.User} is not items uploader");
                 }
                 if (!item.IsRecieved)
                 {
-                    ///Item already recieved
-                }
-                if(request.User != item.Uploader)
-                {
-                    ///Trying to unsuspend different users listing
+                    throw new ConflictException($"Item {item.Id} is already recieved");
                 }
 
                 item.IsSuspended = false;

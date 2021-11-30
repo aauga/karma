@@ -41,19 +41,19 @@ namespace Application.Items.Commands
 
                 if (item == null)
                 {
-                    ///throw exception
+                    throw new NotFoundException($"Item {request.Id} does not exist");
                 }
                 if (user == null)
                 {
-                    ///throw exception
+                    throw new NotFoundException($"User {request.User} does not exist");
                 }
                 if(item.IsRecieved)
                 {
-                    ///Item already recieved
+                    throw new ConflictException($"Item {request.Id} has already been recieved");
                 }
                 if(user.Username != item.Redeemer)
                 {
-                    ///Not the person trying to redeem the item
+                    throw new ConflictException($"User {user.Username} is not the items redeemer");
                 }
 
                 item.IsRecieved = true;

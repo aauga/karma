@@ -42,11 +42,11 @@ namespace Application.Items.Commands
                 }
                 if(item.IsRecieved)
                 {
-                    /// Item already redeemed
+                    throw new ConflictException($"Item {request.Id} has already been recieved");
                 }
                 if(item.IsSuspended)
                 {
-                    /// Item is suspended
+                    throw new ConflictException($"Item {request.Id} is suspended");
                 }
                 if (item.Uploader != user.Username)
                 {

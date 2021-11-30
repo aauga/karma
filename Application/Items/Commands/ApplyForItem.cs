@@ -39,17 +39,17 @@ namespace Application.Items.Commands
                 
                 if(item == null)
                 {
-                    ///throw exception
+                    throw new NotFoundException($"Item {request.Id} does not exist");
                 }
                 if(user == null)
                 {
-                    ///throw exception
+                    throw new NotFoundException($"User {request.User} does not exist");
                 }
 
                 var applied = await _context.Applicants.Where(s => s.User == request.Applicant.User).Where(s => s.ListingId == request.Applicant.ListingId).FirstAsync();
                 if (applied != null)
                 {
-                    ///Already applied for this item
+                    throw new ConflictException($"User {request.User} already applied for this item");
                 }
 
                 request.Applicant.User = user.Username;
