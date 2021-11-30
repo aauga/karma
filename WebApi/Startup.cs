@@ -25,6 +25,9 @@ using WebApi.Filters;
 using Hangfire;
 using Hangfire.SqlServer;
 using WebApi.Middleware;
+using Serilog;
+using Serilog.Formatting.Compact;
+using Serilog.Events;
 
 namespace WebApi
 {
@@ -43,10 +46,12 @@ namespace WebApi
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddControllers(options =>
-            {
-                options.Filters.Add<ApiExceptionFilterAttribute>();
-            });
+            services.AddControllers();
+
+            Log.Logger = new LoggerConfiguration()
+                            .Enrich.FromLogContext()
+                            .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+                            .CreateLogger();
 
             services.AddAuthentication(options =>
             {
@@ -111,6 +116,16 @@ namespace WebApi
             app.UseHangfireDashboard();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            app.UseSerilogRequestLogging(options => {
+                options.MessageTemplate = "Handled {RequestPath}";
+                options.GetLevel = (httpContext, elapsed, ex) => LogEventLevel.Debug;
+                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
+                    diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+                    diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+                };
+            });
 
             app.UseHttpsRedirection();
             app.UseRouting();
