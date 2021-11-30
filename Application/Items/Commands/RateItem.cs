@@ -49,7 +49,7 @@ namespace Application.Items.Commands
                 }
 
                 var ratings = await _context.Ratings.Where(s => s.ItemId == item.Id && s.User == user.Username).ToListAsync();
-                if (ratings.Count() != 0)
+                if (ratings.Any())
                 {
                     throw new ConflictException($"User {user.Username} already rated this item");
                 }

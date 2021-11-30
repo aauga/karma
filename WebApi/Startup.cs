@@ -24,6 +24,7 @@ using System.Net;
 using WebApi.Filters;
 using Hangfire;
 using Hangfire.SqlServer;
+using WebApi.Middleware;
 
 namespace WebApi
 {
@@ -105,10 +106,11 @@ namespace WebApi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-
+               app.UseDeveloperExceptionPage();
             }
             app.UseHangfireDashboard();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -116,7 +118,7 @@ namespace WebApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
