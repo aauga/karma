@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import { STATUS_CODES } from 'http';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -10,6 +11,24 @@ const StyledNavbar = styled(Navbar)`
   padding-top: 16px;
   padding-bottom: 16px;
   box-shadow: 0 1px 4px rgba(64, 87, 109, 0.07);
+`;
+
+const StyledImage = styled.img`
+  border-radius: 50%;
+  max-height: 50px;
+  max-width: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.04);
+  display: inline-block;
+    vertical-align: middle;
+    transform: translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+    transition-duration: 0.3s;
+    transition-property: transform;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const StyledToggle = styled(Navbar.Toggle)`
@@ -60,7 +79,9 @@ const StyledNavLink = styled(Nav.Link)`
 `;
 
 const NavigationBar = () => {
+  const { user } = useAuth0();
   const { isAuthenticated } = useAuth0();
+  // const { picture } = user;
   return (
     <StyledNavbar expand='lg' variant='light'>
       <Container>
@@ -91,6 +112,13 @@ const NavigationBar = () => {
             )}
           </Nav>
           <Nav id='nav-right'>
+
+          {isAuthenticated && (
+                        <Link to='/profile' className='nav-link'>
+           <StyledImage src={user.picture}/>
+           </Link>
+            )}
+
              <AuthenticationButton />
           </Nav>
         </StyledCollapse>

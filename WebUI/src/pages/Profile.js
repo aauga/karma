@@ -15,7 +15,7 @@ const Profile = () => {
             {' '}
             <button class='btn btn-secondary'>
               {' '}
-              <img src={picture} height='100' width='100' />
+              <img src={picture} height='100' width='100'/>
             </button>{' '}
             <span class='name mt-3'>{email}</span> <span class='idd'>@{user.sub}</span>
             <div class='d-flex flex-row justify-content-center align-items-center gap-2'>
