@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Hero from '../components/Hero';
 import LikedCount from '../components/LikedCount';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const baseURL = `${serverUrl}/api/items`;
 
-const Home = () => {
+const SingleItem = () => {
   return (
     <Container>
       <Row className='g-4'>
@@ -54,4 +53,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default SingleItem;
