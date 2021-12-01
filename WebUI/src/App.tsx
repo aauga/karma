@@ -1,14 +1,13 @@
 import { Switch, Route } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+import ProtectedRoute from './auth/protected-route';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
-import { useAuth0 } from '@auth0/auth0-react';
-import Loading from './components/loading';
-import ProtectedRoute from './auth/protected-route';
 import AddListing from './pages/AddListing';
+import Loading from './components/loading';
 import ItemDetails from './components/ItemDetails';
-import Header from './components/Header';
 import Navbar from './components/Navbar';
-import './global.css';
+import './styles/global.css';
 
 const App = () => {
   const { isLoading } = useAuth0();
@@ -19,7 +18,6 @@ const App = () => {
 
   return (
     <div id='app' className='d-flex flex-column h-100'>
-      {/* <Header /> */}
       <Navbar />
       <Switch>
         <Route path='/' exact component={Home} />
