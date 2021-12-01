@@ -40,7 +40,7 @@ namespace Application.Items.Commands
                 {
                     throw new NotFoundException(nameof(Item), request.Id);
                 }
-                if(item.IsRecieved)
+                if(item.IsReceived)
                 {
                     throw new ConflictException($"Item {request.Id} has already been recieved");
                 }

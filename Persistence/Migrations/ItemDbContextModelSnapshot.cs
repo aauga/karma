@@ -58,7 +58,7 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsRecieved")
+                    b.Property<bool>("IsReceived")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsSuspended")

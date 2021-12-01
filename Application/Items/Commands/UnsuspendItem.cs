@@ -39,7 +39,7 @@ namespace Application.Items.Commands
                 {
                     throw new ConflictException($"User {request.User} is not items uploader");
                 }
-                if (!item.IsRecieved)
+                if (!item.IsReceived)
                 {
                     throw new ConflictException($"Item {item.Id} is already recieved");
                 }

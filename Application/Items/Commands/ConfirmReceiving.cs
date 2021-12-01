@@ -47,7 +47,7 @@ namespace Application.Items.Commands
                 {
                     throw new NotFoundException($"User {request.User} does not exist");
                 }
-                if(item.IsRecieved)
+                if(item.IsReceived)
                 {
                     throw new ConflictException($"Item {request.Id} has already been recieved");
                 }
@@ -56,7 +56,7 @@ namespace Application.Items.Commands
                     throw new ConflictException($"User {user.Username} is not the items redeemer");
                 }
 
-                item.IsRecieved = true;
+                item.IsReceived = true;
                 await _pointGiver.GivePointsOnRedemption(item.Uploader, item.Id);
 
                 await _context.SaveChangesAsync();

@@ -2,23 +2,22 @@
 
 namespace Persistence.Migrations
 {
-    public partial class ItemRecieved : Migration
+    public partial class ItemReceived : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
+            migrationBuilder.RenameColumn(
                 name: "IsRecieved",
                 table: "Items",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
+                newName: "IsReceived");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsRecieved",
-                table: "Items");
+            migrationBuilder.RenameColumn(
+                name: "IsReceived",
+                table: "Items",
+                newName: "IsRecieved");
         }
     }
 }
