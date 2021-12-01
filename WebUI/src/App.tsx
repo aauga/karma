@@ -4,6 +4,7 @@ import ProtectedRoute from './auth/protected-route';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import AddListing from './pages/AddListing';
+import SingleItem from './pages/SingleItem';
 import Loading from './components/loading';
 import ItemDetails from './components/ItemDetails';
 import Navbar from './components/Navbar';
@@ -21,6 +22,7 @@ const App = () => {
       <Navbar />
       <Switch>
         <Route path='/' exact component={Home} />
+        <Route path='/singleitem' exact component={SingleItem} />
         <Route path='/details/:id' exact component={ItemDetails} />
         <ProtectedRoute path='/addlisting' component={AddListing} />
         <ProtectedRoute path='/profile' component={Profile} />
