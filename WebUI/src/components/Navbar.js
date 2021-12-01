@@ -26,6 +26,7 @@ const StyledImage = styled.img`
     -moz-osx-font-smoothing: grayscale;
     transition-duration: 0.3s;
     transition-property: transform;
+    margin-right: 1rem;
   &:hover {
     transform: scale(1.1);
   }
@@ -114,7 +115,7 @@ const NavigationBar = () => {
           <Nav id='nav-right'>
 
           {isAuthenticated && (
-                        <Link to='/profile' className='nav-link'>
+                        <Link to='/profile'>
            <StyledImage src={user.picture}/>
            </Link>
             )}
