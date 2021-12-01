@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import Loading from '../components/loading';
 
 const Profile = () => {
@@ -9,25 +9,58 @@ const Profile = () => {
   const { picture, email, nickname } = user;
   return (
     <Container>
-      <div>
-        <div className='row align-items-center profile-header'>
-          <div className='col-md-2 mb-3'>
-            <img src={picture} alt='Profile' className='rounded-circle img-fluid profile-picture mb-3 mb-md-0' />
-          </div>
-          <div className='col-md text-center text-md-left'>
-            <h2>{nickname}</h2>
-            <p className='lead text-muted'>{email}</p>
+      <Row>
+        <div class='card p-4'>
+          <div class=' image d-flex flex-column justify-content-center align-items-center'>
+            {' '}
+            <button class='btn btn-secondary'>
+              {' '}
+              <img src={picture} height='100' width='100'/>
+            </button>{' '}
+            <span class='name mt-3'>{email}</span> <span class='idd'>@{user.sub}</span>
+            <div class='d-flex flex-row justify-content-center align-items-center gap-2'>
+              {' '}
+              <span>
+                <i class='fa fa-copy'></i>
+              </span>{' '}
+            </div>
+            <div class='d-flex flex-row justify-content-center align-items-center mt-3'>
+              {' '}
+              <span class='number'>
+                1069 <span class='follow'>Total listings</span>
+              </span>{' '}
+            </div>
+            <div class=' d-flex mt-2'>
+              {' '}
+              <button class='btn1 btn-dark'>Edit Profile</button>{' '}
+            </div>
+            <div class='text mt-3'>
+              {' '}
+            </div>
+            <div class='gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center'>
+              {' '}
+              <span>
+                <i class='fa fa-twitter'></i>
+              </span>{' '}
+              <span>
+                <i class='fa fa-facebook-f'></i>
+              </span>{' '}
+              <span>
+                <i class='fa fa-instagram'></i>
+              </span>{' '}
+              <span>
+                <i class='fa fa-linkedin'></i>
+              </span>{' '}
+            </div>
+            <div class=' px-2 rounded mt-4 date '>
+              {' '}
+              <span class='join'>Joined {user.updated_at}</span>{' '}
+            </div>
           </div>
         </div>
-        <div className='row'>
-          <pre className='col-12 text-light bg-dark p-4'>{JSON.stringify(user, null, 2)}</pre>
-        </div>
-      </div>
+      </Row>
     </Container>
   );
 };
 
-// export default withAuthenticationRequired(Profile, {
-//   onRedirecting: () => <Loading />,
-// });
 export default Profile;
