@@ -10,8 +10,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    [Migration("20211121165231_ItemRecieved")]
-    partial class ItemRecieved
+    [Migration("20211201083419_ItemReceived")]
+    partial class ItemReceived
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,7 +60,7 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsRecieved")
+                    b.Property<bool>("IsReceived")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsSuspended")

@@ -51,7 +51,7 @@ namespace Application.Items.Commands
                     throw new ConflictException($"Item {request.ItemId} is suspended");
                 }
 
-                if (item.IsRecieved)
+                if (item.IsReceived)
                 {
                     throw new ConflictException($"Item {request.ItemId} has already been recieved");
                 }
@@ -61,7 +61,7 @@ namespace Application.Items.Commands
                 }
                 if(winner.User == request.User)
                 {
-                    throw new ConflictException($"Cant win your own item");
+                    throw new ConflictException($"You can not win your own item");
                 }
                 if (item.Uploader != request.User)
                 {

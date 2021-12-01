@@ -105,7 +105,7 @@ namespace WebApi.Controllers
         {
             var user = await GetUser();
 
-            await Mediator.Send(new Edit.Command { Id = id , User = user});
+            await Mediator.Send(new UnsuspendItem.Command { Id = id , User = user});
 
             return NoContent();
         }
