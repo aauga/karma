@@ -15,12 +15,11 @@ const Profile = () => {
             {' '}
             <button class='btn btn-secondary'>
               {' '}
-              <img src='https://i.imgur.com/wvxPV9S.png' height='100' width='100' />
+              <img src={picture} height='100' width='100' />
             </button>{' '}
-            <span class='name mt-3'>Eleanor Pena</span> <span class='idd'>@eleanorpena</span>
+            <span class='name mt-3'>{email}</span> <span class='idd'>@{user.sub}</span>
             <div class='d-flex flex-row justify-content-center align-items-center gap-2'>
               {' '}
-              <span class='idd1'>Oxc4c16a645_b21a</span>{' '}
               <span>
                 <i class='fa fa-copy'></i>
               </span>{' '}
@@ -28,7 +27,7 @@ const Profile = () => {
             <div class='d-flex flex-row justify-content-center align-items-center mt-3'>
               {' '}
               <span class='number'>
-                1069 <span class='follow'>Followers</span>
+                1069 <span class='follow'>Total listings</span>
               </span>{' '}
             </div>
             <div class=' d-flex mt-2'>
@@ -37,10 +36,6 @@ const Profile = () => {
             </div>
             <div class='text mt-3'>
               {' '}
-              <span>
-                Eleanor Pena is a creator of minimalistic x bold graphics and digital artwork.<br></br>
-                <br></br> Artist/ Creative Director by Day #NFT minting@ with FND night.{' '}
-              </span>{' '}
             </div>
             <div class='gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center'>
               {' '}
@@ -59,7 +54,7 @@ const Profile = () => {
             </div>
             <div class=' px-2 rounded mt-4 date '>
               {' '}
-              <span class='join'>Joined May,2021</span>{' '}
+              <span class='join'>Joined {user.updated_at}</span>{' '}
             </div>
           </div>
         </div>
