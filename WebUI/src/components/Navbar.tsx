@@ -91,9 +91,7 @@ const NavigationBar = () => {
             )}
           </Nav>
           <Nav id='nav-right'>
-            {/* <SignInBtn>Sign In</SignInBtn>
-             */}
-            <AuthenticationButton />
+             <AuthenticationButton />
           </Nav>
         </StyledCollapse>
       </Container>
