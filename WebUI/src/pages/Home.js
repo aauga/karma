@@ -1,75 +1,33 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container, Row } from 'react-bootstrap';
+import styled from 'styled-components';
 import axios from 'axios';
-import Hero from '../components/Hero';
-import LikedCount from '../components/LikedCount';
+import Listings from '../components/listings/Listings';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const baseURL = `${serverUrl}/api/items`;
 
+const StyledRow = styled(Row)`
+    margin-top: 16px;
+`;
+
 const Home = () => {
-  const [post, setPost] = useState(null);
+    const [post, setPost] = useState(null);
 
-  useEffect(() => {
-    axios.get(baseURL).then(res => {
-      setPost(res.data);
-    });
-  }, []);
+    useEffect(() => {
+        axios
+            .get(baseURL)
+            .then(res => setPost(res.data))
+            .catch(error => console.log(error));
+    }, []);
 
-  return (
-    <Container>
-      <Hero />
-      <Row xs={1} md={2} lg={3} className='g-4'>
-        {post != null &&
-          post.map(item => (
-            <Col>
-              <Card key={item.id} style={{ width: '100%', height: '100%' }}>
-                {item.imageUrls[0] == null ? (
-                  <div
-                    style={{
-                      height: '200px',
-                      backgroundColor: 'grey'
-                    }}
-                  ></div>
-                ) : (
-                  <Card.Img
-                    variant='top'
-                    src={item.imageUrls[0]}
-                    style={{
-                      height: '200px'
-                    }}
-                  />
-                )}
-                <Card.Body className='position-relative'>
-                  <Card.Title>{item.name}</Card.Title>
-                  <Card.Text>{item.description}</Card.Text>
-                  <LikedCount />
-                </Card.Body>
-                <ListGroup className='list-group-flush'>
-                  <ListGroupItem>
-                    <b>City: </b> Vilnius
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    <b>Category: </b> Furniture
-                  </ListGroupItem>
-                </ListGroup>
-                <Card.Body>
-                  <Link to={`/details/${item.id}`} className='btn btn-primary stretched-link'>
-                    Visit
-                  </Link>
-                </Card.Body>
-                <Card.Footer>
-                  <Card.Text>
-                    <small class='text-muted'>Last updated 3 mins ago</small>
-                  </Card.Text>
-                </Card.Footer>
-              </Card>
-            </Col>
-          ))}
-      </Row>
-    </Container>
-  );
+    return (
+        <Container>
+            <StyledRow>
+                <Listings list={post} />
+            </StyledRow>
+        </Container>
+    );
 };
 
 export default Home;
