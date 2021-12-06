@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, ListGroupItem, Button, Carousel, CarouselItem, ProgressBar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BsHeart } from 'react-icons/bs';
@@ -10,42 +10,35 @@ const baseURL = `${serverUrl}/api/items`;
 const SingleItem = () => {
     return (
         <Container>
-            <Row className='g-4'>
+            <Row className='g-4 mt-2'>
                 <Col md='9'>
-                    <Card style={{ width: '100%', height: '100%' }}>
-                        <div
-                            style={{
-                                height: '200px',
-                                backgroundColor: 'grey'
-                            }}
-                        ></div>
-                        <Card.Img
-                            variant='top'
-                            style={{
-                                height: '200px'
-                            }}
-                        />
-                        <Card.Body className='position-relative'>
-                            <Card.Title>Lorem ipsum</Card.Title>
-                            <Card.Text>Lorem ipsum lorem ipsum lorem ipsum lorem ipsum </Card.Text>
-                        </Card.Body>
-                        <ListGroup className='list-group-flush'>
-                            <ListGroupItem>
-                                <b>City: </b> Vilnius
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                <b>Category: </b> Furniture
-                            </ListGroupItem>
-                        </ListGroup>
-                        <Card.Body>
-                            <Link className='btn btn-primary stretched-link'>Visit</Link>
-                        </Card.Body>
-                        <Card.Footer>
-                            <Card.Text>
-                                <small class='text-muted'>Last updated 3 mins ago</small>
-                            </Card.Text>
-                        </Card.Footer>
-                    </Card>
+                    <Carousel fade>
+                        <Carousel.Item>
+                            <img
+                                className='d-block w-100'
+                                src='https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
+                                alt='First slide'
+                            />
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <img
+                                className='d-block w-100'
+                                src='https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
+                                alt='Second slide'
+                            />
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <img
+                                className='d-block w-100'
+                                src='https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
+                                alt='Third slide'
+                            />
+                        </Carousel.Item>
+                    </Carousel>
+                    <div>
+                        <p>Time left to participate:</p>
+                        <ProgressBar striped variant='primary' now={80} />
+                    </div>
                 </Col>
                 <Col md='3'>
                     <Card>
