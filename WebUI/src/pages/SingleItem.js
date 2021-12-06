@@ -36,8 +36,8 @@ const SingleItem = () => {
                         </Carousel.Item>
                     </Carousel>
                     <div>
-                        <p>Time left to participate:</p>
-                        <ProgressBar striped variant='primary' now={80} />
+                        <span class='mt-5'>Time left to participate:</span>
+                        <ProgressBar striped variant='primary' now={80} label={`3 hours`} />
                     </div>
                 </Col>
                 <Col md='3'>
