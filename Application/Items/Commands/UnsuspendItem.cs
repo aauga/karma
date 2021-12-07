@@ -41,7 +41,7 @@ namespace Application.Items.Commands
                 }
                 if (!item.IsReceived)
                 {
-                    throw new ConflictException($"Item {item.Id} is already recieved");
+                    throw new ConflictException($"Item {item.Id} is already received");
                 }
 
                 item.IsSuspended = false;
