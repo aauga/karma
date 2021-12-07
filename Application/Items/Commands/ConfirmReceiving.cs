@@ -15,45 +15,50 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Items.Commands
 {
-    public class ApplyForItem
+    public class ConfirmRecieving
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public string User { get; set; }
-            public Applicant Applicant { get; set; }
+            public string User { get; set; } 
         }
         public class Handler : IRequestHandler<Command>
         {
             private readonly ItemDbContext _context;
+                private readonly PointGiver _pointGiver;
 
-            public Handler(ItemDbContext context)
+            public Handler(ItemDbContext context , PointGiver pointGiver)
             {
                 _context = context;
+                _pointGiver = pointGiver;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var item = await _context.Items.FindAsync(request.Id);
                 var user = await _context.Users.FindAsync(request.User);
-                
-                if(item == null)
+
+
+                if (item == null)
                 {
                     throw new NotFoundException($"Item {request.Id} does not exist");
                 }
-                if(user == null)
+                if (user == null)
                 {
                     throw new NotFoundException($"User {request.User} does not exist");
                 }
-
-                var applied = await _context.Applicants.Where(s => s.User == request.Applicant.User).Where(s => s.ListingId == request.Applicant.ListingId).FirstAsync();
-                if (applied != null)
+                if(item.IsReceived)
                 {
-                    throw new ConflictException($"User {request.User} already applied for this item");
+                    throw new ConflictException($"Item {request.Id} has already been recieved");
+                }
+                if(user.Username != item.Redeemer)
+                {
+                    throw new ConflictException($"User {user.Username} is not the items redeemer");
                 }
 
-                request.Applicant.User = user.Username;
-                await _context.Applicants.AddAsync(request.Applicant);
+                item.IsReceived = true;
+                await _pointGiver.GivePointsOnRedemption(item.Uploader, item.Id);
+
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;

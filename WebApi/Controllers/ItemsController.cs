@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("contributors/{id}")]
         public async Task<ActionResult<IEnumerable<Applicant>>> GetContributors([FromRoute] Guid id)
         {
             var user = await GetUser();
@@ -67,6 +67,28 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPost("rate/{id}")]
+        public async Task<IActionResult> RateItem([FromRoute] Guid id ,[FromForm] Rating Rating)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new RateItem.Command {Id = id , Rating = Rating , User = user });
+
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("apply/{id}")]
+        public async Task<IActionResult> ApplyForItem([FromRoute] Guid id, [FromForm] Applicant applicant)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new ApplyForItem.Command { Id = id, Applicant = applicant, User = user });
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditItem([FromRoute] Guid id, [FromForm] Item item)
         {
@@ -78,12 +100,12 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
+        [HttpPut("unsuspend/{id}")]
         public async Task<IActionResult> UnsuspendItem([FromRoute] Guid id)
         {
             var user = await GetUser();
 
-            await Mediator.Send(new Edit.Command { Id = id , User = user});
+            await Mediator.Send(new UnsuspendItem.Command { Id = id , User = user});
 
             return NoContent();
         }
@@ -100,29 +122,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("redeem/{id}")]
-        public async Task<IActionResult> RedeemItem([FromRoute] Guid id)
-        {
-            var user = await GetUser();
-
-            await Mediator.Send(new Redeem.Command { Id = id, User = user });
-            
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("{id}")]
-        public async Task<IActionResult> ContributePoints ([FromRoute] Guid id,[FromBody] Applicant pointContributor)
-        {
-            var user = await GetUser();
-
-            await Mediator.Send(new ApplyForItem.Command { User = user, Id = id, Contributor = pointContributor });
-
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("{id}")]
+        [HttpPost("winner/{id}")]
         public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] Applicant winner)
         {
             var user = await GetUser();
