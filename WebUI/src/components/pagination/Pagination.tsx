@@ -23,24 +23,28 @@ const ListingPagination = ({ props }: Props) => {
     let totalPages = props.totalPages;
     let currPage = props.page;
 
+    // Hide previous page button if first page
     if (currPage > 1) {
         items.push(<Prev currPage={currPage} />);
     }
 
     items.push(<Number totalPages={totalPages} currPage={currPage} page={1} />);
 
+    // Case 1 2 3 4 5 ... X
     if (currPage < 5) {
         for (let number = 2; number <= 5 && number < totalPages; number++) {
             items.push(<Number totalPages={totalPages} currPage={currPage} page={number} />);
         }
 
         totalPages > 6 && items.push(<Ellipsis />);
+        // Case 1 ... X X X X X
     } else if (currPage > totalPages - 4) {
         totalPages > 6 && items.push(<Ellipsis />);
 
         for (let number = totalPages - 4; number < totalPages; number++) {
             items.push(<Number totalPages={totalPages} currPage={currPage} page={number} />);
         }
+        // Case 1 ... Y Y Y Y Y ... X
     } else {
         items.push(<Ellipsis />);
 
@@ -51,10 +55,12 @@ const ListingPagination = ({ props }: Props) => {
         items.push(<Ellipsis />);
     }
 
+    // This is to prevent 1 1 being displayed if there's only one page
     if (totalPages > 1) {
         items.push(<Number totalPages={totalPages} currPage={currPage} page={totalPages} />);
     }
 
+    // Hide next page button if reached the end
     if (currPage < totalPages) {
         items.push(<Next currPage={currPage} />);
     }
