@@ -34,7 +34,7 @@ namespace Application.Items.Commands
 
                 if (item == null)
                 {
-                    throw new NotFoundException(nameof(Item), request.Id);
+                    throw new NotFoundException($"Item {request.Id} does not exist");
                 }
 
                 if (item.Uploader != user.Username)

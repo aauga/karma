@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    partial class ItemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211201083419_ItemReceived")]
+    partial class ItemReceived
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +71,6 @@ namespace Persistence.Migrations
 
                     b.Property<string>("Redeemer")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Uploaded")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Uploader")
                         .HasColumnType("nvarchar(max)");

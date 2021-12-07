@@ -28,7 +28,7 @@ namespace Application.Items.Commands
         {
             private readonly ItemDbContext _context;
 
-            public Handler(ItemDbContext context, IImageUpload imageUpload, Redeemer winnerPicker)
+            public Handler(ItemDbContext context)
             { 
                 _context = context;
             }
@@ -37,22 +37,44 @@ namespace Application.Items.Commands
             {
                 var item = await _context.Items.FindAsync(request.ItemId);
                 var winner = await _context.Applicants.FindAsync(request.Winner.User);
-                if(item.Uploader != request.User)
+
+                if (item == null)
                 {
-                    ///throw exception trying to choose winner for another user
+                    throw new NotFoundException($"Item {request.ItemId} does not exist");
+                }
+                if (!request.Winner.Equals(winner))
+                {
+                    throw new NotFoundException($"Contributor {request.Winner.User} does not exist");
+                }
+                if (item.IsSuspended)
+                {
+                    throw new ConflictException($"Item {request.ItemId} is suspended");
+                }
+
+                if (item.IsReceived)
+                {
+                    throw new ConflictException($"Item {request.ItemId} has already been recieved");
+                }
+                if (item.Redeemer != null)
+                {
+                    throw new ConflictException($"Item {request.ItemId} is suspended");
+                }
+                if(winner.User == request.User)
+                {
+                    throw new ConflictException($"You can not win your own item");
+                }
+                if (item.Uploader != request.User)
+                {
+                    throw new ConflictException($"User is not the uploader of item");
                 }
                 if(item.WinnerChosenRandomly)
                 {
-                    ///Throw exception winner should be chosen randomly
+                    throw new ConflictException($"Items {request.ItemId} winner will be chosen randomly");
                 }
-                if(!request.Winner.Equals(winner))
-                {
-                    ///Throw exception such contributor doesnt exist
-                }
+                
                 item.Redeemer = winner.User;
                 item.IsSuspended = true;
-                ///Terminate suspension  task
-
+                
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;
