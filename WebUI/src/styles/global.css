@@ -1,5 +1,5 @@
 :root {
-  --bs-primary: #885df1;
+    --bs-primary: #885df1;
 }
 
 h1,
@@ -8,25 +8,46 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Raleway', sans-serif;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
 }
 
 p {
-  font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
-.btn-primary {
-  background-color: #885df1;
-  border-color: #885df1;
+.btn-primary,
+.page-item.active .page-link {
+    background-color: #885df1;
+    border-color: #885df1;
 }
 
 .btn-primary:hover {
-  background-color: #7a54d9;
-  border-color: #7a54d9;
+    background-color: #7a54d9;
+    border-color: #7a54d9;
 }
 
 .btn-primary:focus {
-  background-color: #6d4ac1;
-  border-color: #6d4ac1;
-  box-shadow: 0 0 0 0.25rem rgba(160, 125, 244, 0.5);
+    background-color: #6d4ac1;
+    border-color: #6d4ac1;
+    box-shadow: 0 0 0 0.25rem rgba(160, 125, 244, 0.5);
+}
+
+.page-link {
+    margin: 0 !important;
+}
+
+.page-link:hover {
+    color: #000000;
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.page-link:focus {
+    color: #000000;
+    background-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.16);
+}
+
+.nav-link a {
+    color: #000000 !important;
 }
