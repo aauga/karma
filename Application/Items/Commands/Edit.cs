@@ -42,7 +42,7 @@ namespace Application.Items.Commands
                 }
                 if(item.IsReceived)
                 {
-                    throw new ConflictException($"Item {request.Id} has already been recieved");
+                    throw new ConflictException($"Item {request.Id} has already been received");
                 }
                 if(item.IsSuspended)
                 {
