@@ -27,24 +27,17 @@ namespace Application.Items.Commands
         {
             private readonly ItemDbContext _context;
             private readonly IImageUpload _imgUpload;
-            private readonly Redeemer redeemer;
+            private readonly Redeemer _redeemer;
             
             public Handler(ItemDbContext context, IImageUpload imageUpload, Redeemer winnerPicker)
             {
                 _imgUpload = imageUpload;
                 _context = context;
-                redeemer = winnerPicker;
+                _redeemer = winnerPicker;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var items = await _context.Items.ToListAsync(cancellationToken);
-
-                if (items.Any(item => item.Equals(request.Item)))
-                {
-                    throw new ConflictException("Such item already exists");
-                }
-                
                 if (request.Item.PostedFiles != null)
                 {
                     List<String> urls = _imgUpload.UploadImages(request.Item.PostedFiles);
@@ -60,18 +53,21 @@ namespace Application.Items.Commands
                 }
 
                 var user = await _context.Users.FindAsync(request.User);
-                request.Item.Uploader = user.Username;
+                
+                // gonna leave this as temp until front is connected to back
+                request.Item.Uploader = "temp";
                 request.Item.IsSuspended = false;
+                request.Item.Uploaded = DateTime.Now;
 
                 await _context.Items.AddAsync(request.Item);
 
                 if(request.Item.WinnerChosenRandomly)
                 {
-                    BackgroundJob.Schedule(() => redeemer.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
+                    BackgroundJob.Schedule(() => _redeemer.ChooseWinner(request.Item.Id), TimeSpan.FromTicks(DateTime.Now.Ticks - request.Item.ExpirationDate.Ticks)); /// Schedule task to find the item Redeemer
                 }
                 else
                 {
-                    BackgroundJob.Schedule(() => redeemer.SuspendItem(request.Item.Id), TimeSpan.FromDays(7)); ///Schedule item to be suspended after a week
+                    BackgroundJob.Schedule(() => _redeemer.SuspendItem(request.Item.Id), TimeSpan.FromDays(7)); ///Schedule item to be suspended after a week
                 }
 
                 await _context.SaveChangesAsync();
