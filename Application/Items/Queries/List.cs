@@ -2,11 +2,9 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,11 +12,12 @@ namespace Application.Items.Queries
 {
     public class List
     {
-        public class Query : IRequest<IEnumerable<Item>>
+        public class Query : IRequest<object>
         {
-            
+            public uint Page { get; set; }
+            public uint ItemsPerPage { get; set; }
         }
-        public class Handler : IRequestHandler<Query, IEnumerable<Item>>
+        public class Handler : IRequestHandler<Query, object>
         {
             private readonly ItemDbContext _context;
             public Handler(ItemDbContext context)
@@ -26,9 +25,14 @@ namespace Application.Items.Queries
                 _context = context;
             }
 
-            public async Task<IEnumerable<Item>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<object> Handle(Query request, CancellationToken cancellationToken)
             {
-                List<Item> items = await _context.Items.Where(s => !s.IsSuspended).ToListAsync(cancellationToken);
+                List<Item> items = await _context.Items
+                    .Where(s => !s.IsSuspended)
+                    .OrderByDescending(x => x.Uploaded)
+                    .Skip((int) ((request.Page - 1) * request.ItemsPerPage))
+                    .Take((int) request.ItemsPerPage)
+                    .ToListAsync(cancellationToken);
                 
                 foreach(Item item in items)
                 {
@@ -43,8 +47,14 @@ namespace Application.Items.Queries
                     
                     item.ImageUrls = urls;
                 }
+
+                var totalItems = _context.Items.Count();
+                var totalPages = (int) Math.Ceiling((float) totalItems / request.ItemsPerPage);
                 
-                return items;
+                Object pagination = new
+                    {TotalPages = totalPages, request.Page, request.ItemsPerPage};
+
+                return new {Pagination = pagination, Items = items};
             }
         }
     }
