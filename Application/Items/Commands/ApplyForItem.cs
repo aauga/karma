@@ -20,7 +20,7 @@ namespace Application.Items.Commands
         public class Command : IRequest
         {
             public string User { get; set; }
-            public Guid Item { get; set; }
+            public Guid ItemId { get; set; }
             public Applicant Applicant { get; set; }
         }
         public class Handler : IRequestHandler<Command>
@@ -34,12 +34,12 @@ namespace Application.Items.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var item = await _context.Items.FindAsync(request.Item);
+                var item = await _context.Items.FindAsync(request.ItemId);
                 var user = await _context.Users.FindAsync(request.User);
                 
                 if(item == null)
                 {
-                    throw new NotFoundException(nameof(Item), request.Item); 
+                    throw new NotFoundException(nameof(Item), request.ItemId); 
                 }
                 
                 /*
@@ -50,7 +50,7 @@ namespace Application.Items.Commands
                 */
 
                 request.Applicant.User = request.User;
-                request.Applicant.Item = request.Item;
+                request.Applicant.Item = request.ItemId;
 
                 await _context.Applicants.AddAsync(request.Applicant);
                 await _context.SaveChangesAsync();
