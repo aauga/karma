@@ -1,5 +1,4 @@
-﻿using Application.Exceptions;
-using Domain.Entities;
+﻿using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -34,9 +33,9 @@ namespace Application.Items.Queries
                 var item = await _context.Items.FindAsync(request.ItemId);
                 if(item.Uploader != request.User)
                 {
-                    throw new ConflictException($"Item {request.ItemId} does not belong to the client");
+                    ///Throw exception different user trying to access contributors
                 }
-                var contributors = await _context.Applicants.Where(s => s.ListingId == request.ItemId).ToListAsync();
+                var contributors = await _context.Applicants.Where(s => s.Item == request.ItemId).ToListAsync();
 
                 return contributors;
             }

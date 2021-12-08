@@ -12,10 +12,12 @@ namespace Domain.Entities
     {
         [Key]
         [ForeignKey("User")]
+        [Column(Order = 1)]
         public string User { get; set; }
+        [Key]
         [ForeignKey("Item")]
-        public Guid ListingId { get; set; }
-        public string Reasoning { get; set; }
-
+        [Column(Order = 2)]
+        public Guid Item { get; set; }
+        public string Reason { get; set; }
     }
 }
