@@ -272,6 +272,9 @@ paket-files/
 __pycache__/
 *.pyc
 
+# Other
+*.txt
+
 # Cake - Uncomment if you are using it
 # tools/
 
