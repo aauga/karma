@@ -12,8 +12,15 @@ namespace Persistence
     {
         public ItemDbContext(DbContextOptions<ItemDbContext> options) : base(options)
         {
-
+                
         }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Applicant>()
+                .HasKey(x => new {x.User, x.Item });
+        }
+        
         public DbSet<Item> Items { get; set; }
         public DbSet<ListingImage> Images { get; set; }
         public DbSet<User> Users { get; set; }
