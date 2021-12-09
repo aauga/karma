@@ -34,6 +34,7 @@ namespace Application.Items.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                /*
                 var item = await _context.Items.FindAsync(request.ItemId);
                 var user = await _context.Users.FindAsync(request.User);
                 
@@ -42,18 +43,17 @@ namespace Application.Items.Commands
                     throw new NotFoundException(nameof(Item), request.ItemId); 
                 }
                 
-                /*
                 if(user == null)
                 {
                     throw new NotFoundException(nameof(User), request.User); 
                 }
-                */
 
                 request.Applicant.User = request.User;
                 request.Applicant.Item = request.ItemId;
 
                 await _context.Applicants.AddAsync(request.Applicant);
                 await _context.SaveChangesAsync();
+                */
 
                 return Unit.Value;
             }

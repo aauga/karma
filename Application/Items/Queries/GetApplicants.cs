@@ -35,7 +35,7 @@ namespace Application.Items.Queries
                 {
                     ///Throw exception different user trying to access contributors
                 }
-                var contributors = await _context.Applicants.Where(s => s.Item == request.ItemId).ToListAsync();
+                var contributors = await _context.Applicants.Where(s => s.Item.Id == request.ItemId).ToListAsync();
 
                 return contributors;
             }
