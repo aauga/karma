@@ -27,9 +27,7 @@ namespace Application.Items.Queries
             }
             public async Task<List<Applicant>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var contributions = await _context.Applicants.Where(s => s.User.Username == request.User).ToListAsync();
-
-                return contributions;
+                return null;
             }
         }
     }

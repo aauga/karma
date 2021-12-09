@@ -20,12 +20,12 @@ namespace Services
         public async Task ChooseWinner(Guid itemId)
         {
             var item = await _context.Items.FindAsync(itemId);
-            var applicants = _context.Applicants.Where(s => s.Item.Id == itemId).ToList();
+            var applicants = item.Applicants;
             
             var rand = new Random();
             var winnerIndex = rand.Next(0, applicants.Count);
+
             var winner = applicants.Skip(winnerIndex).First();
-            
             item.Redeemer = winner.User.Username;
             
             await _context.SaveChangesAsync();

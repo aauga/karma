@@ -30,6 +30,7 @@ namespace Application.Items.Queries
 
             public async Task<IEnumerable<Applicant>> Handle(Query request, CancellationToken cancellationToken)
             {
+                /*
                 var item = await _context.Items.FindAsync(request.ItemId);
                 if(item.Uploader != request.User)
                 {
@@ -38,6 +39,8 @@ namespace Application.Items.Queries
                 var contributors = await _context.Applicants.Where(s => s.Item.Id == request.ItemId).ToListAsync();
 
                 return contributors;
+                */
+                return null;
             }
         }
     }
