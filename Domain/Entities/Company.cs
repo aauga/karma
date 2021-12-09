@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string CompanyWebsite { get; set; }
-        public string CompanyLogoUrl { get; set; }
+        public string Website { get; set; }
+        public string LogoUrl { get; set; }
     }
 }

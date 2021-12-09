@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    class CouponCode
+    public class CouponCode
     {
         [Key]
         public string ActivationCode { get; set; }
