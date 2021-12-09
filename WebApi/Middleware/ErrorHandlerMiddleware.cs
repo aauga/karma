@@ -39,6 +39,9 @@ namespace WebApi.Middleware
                     case ConflictException e:
                         context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
+                    case NotEnoughCreditsException e:
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        break;
                     case NotFoundException e:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
@@ -52,7 +55,7 @@ namespace WebApi.Middleware
 
                 var result = JsonSerializer.Serialize(new { message = error?.Message });
                 await context.Response.WriteAsync(result);
-                //LogErrorExceptionWithRequestBody(context, error);
+                LogErrorExceptionWithRequestBody(context, error);
             }
         }
 

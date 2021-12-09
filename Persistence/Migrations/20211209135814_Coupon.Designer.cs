@@ -10,8 +10,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    [Migration("20211208134254_RemoveApplicantUsernameFK")]
-    partial class RemoveApplicantUsernameFK
+    [Migration("20211209135814_Coupon")]
+    partial class Coupon
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,6 +42,62 @@ namespace Persistence.Migrations
                     b.ToTable("Applicants");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Coupon", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Coupons");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CouponCode", b =>
+                {
+                    b.Property<string>("ActivationCode")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("CouponId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ActivationCode");
+
+                    b.ToTable("CouponCodes");
+                });
+
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
@@ -60,6 +116,9 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsReceived")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsSuspended")
                         .HasColumnType("bit");
 
@@ -68,9 +127,6 @@ namespace Persistence.Migrations
 
                     b.Property<string>("Redeemer")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Uploaded")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Uploader")
                         .HasColumnType("nvarchar(max)");
