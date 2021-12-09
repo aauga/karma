@@ -27,6 +27,7 @@ namespace Application.Users
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                /*
                 var check = _context.Users.FindAsync(request.User);
                 if(check != null)
                 {
@@ -35,6 +36,7 @@ namespace Application.Users
                 }
                 await _context.AddAsync(new User { Username = request.User, KarmaPoints = 100, isVerified = false });
                 await _context.SaveChangesAsync();
+                */
                 return Unit.Value;
             }
         }

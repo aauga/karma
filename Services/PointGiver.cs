@@ -19,7 +19,7 @@ namespace Services
         public async Task GivePoints(string user, int amount)
         {
             var User = await _context.Users.FindAsync(user);
-            User.KarmaPoints += amount;
+            User.Points += amount;
             await _context.SaveChangesAsync();
         }
 
