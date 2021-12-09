@@ -55,7 +55,7 @@ namespace WebApi.Middleware
 
                 var result = JsonSerializer.Serialize(new { message = error?.Message });
                 await context.Response.WriteAsync(result);
-                //LogErrorExceptionWithRequestBody(context, error);
+                LogErrorExceptionWithRequestBody(context, error);
             }
         }
 
