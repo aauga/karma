@@ -10,11 +10,13 @@ namespace Domain.Entities
     public class User
     {
         [Key]
+        public string AuthId { get; set; }
         public string Username { get; set; }
-        public int KarmaPoints { get; set; }
-        public List<Item> Listings { get; set; }
-        public List<Applicant> Contributions { get; set; }
-        public bool isVerified { get; set; }
+        public int Points { get; set; }
+        public bool IsVerified { get; set; }
         public bool isAdmin { get; set; }
+        
+        public ICollection<Item> Listings { get; set; }
+        public ICollection<Applicant> Applications { get; set; }
     }
 }
