@@ -15,5 +15,6 @@ namespace Domain.Entities
         public List<Item> Listings { get; set; }
         public List<Applicant> Contributions { get; set; }
         public bool isVerified { get; set; }
+        public bool isAdmin { get; set; }
     }
 }
