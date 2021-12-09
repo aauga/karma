@@ -23,6 +23,7 @@ namespace Domain.Entities
         public List<String> ImageUrls { get; set; }
         public string Uploader { get; set; }
         public string Redeemer { get; set; }
-       
+        
+        public ICollection<Applicant> Applicants { get; set; }
     }
 }
