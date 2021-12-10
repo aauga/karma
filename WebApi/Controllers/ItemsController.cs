@@ -112,10 +112,10 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost("winner/{id}")]
-        public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] Applicant winner)
+        public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] Guid WinnerId)
         {
             var user = await GetUser();
-            await Mediator.Send(new ChooseWinner.Command { User = user, Winner = winner, ItemId = id });
+            await Mediator.Send(new ChooseWinner.Command { User = user, WinnerId = WinnerId, ItemId = id });
             return NoContent();
         }
     }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Exceptions;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -30,17 +31,26 @@ namespace Application.Items.Queries
 
             public async Task<IEnumerable<Applicant>> Handle(Query request, CancellationToken cancellationToken)
             {
-                /*
+                
                 var item = await _context.Items.FindAsync(request.ItemId);
+
+                if(item == null)
+                {
+                    throw new NotFoundException(nameof(Item), request.ItemId);
+                }
                 if(item.Uploader != request.User)
                 {
-                    ///Throw exception different user trying to access contributors
+                    throw new UserDoesNotHaveAccessException($"User {request.User} does not have access to this");
                 }
-                var contributors = await _context.Applicants.Where(s => s.Item.Id == request.ItemId).ToListAsync();
+
+                var contributors = item.Applicants;
+
+                if(contributors.Any())
+                {
+                    return null;
+                }
 
                 return contributors;
-                */
-                return null;
             }
         }
     }

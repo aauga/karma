@@ -42,6 +42,9 @@ namespace WebApi.Middleware
                     case NotEnoughCreditsException e:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
+                    case UserDoesNotHaveAccessException e:
+                        context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        break;
                     case NotFoundException e:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
