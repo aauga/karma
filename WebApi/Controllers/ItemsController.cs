@@ -67,23 +67,23 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPost("apply/{id}")]
+        public async Task<IActionResult> ApplyForItem([FromRoute] Guid id, [FromForm] Applicant applicant)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new ApplyForItem.Command { ItemId = id, Applicant = applicant, User = user });
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpPost("rate/{id}")]
         public async Task<IActionResult> RateItem([FromRoute] Guid id ,[FromForm] Rating Rating)
         {
             var user = await GetUser();
 
             await Mediator.Send(new RateItem.Command {Id = id , Rating = Rating , User = user });
-
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("apply/{id}")]
-        public async Task<IActionResult> ApplyForItem([FromRoute] Guid id, [FromForm] Applicant applicant)
-        {
-            var user = await GetUser();
-
-            await Mediator.Send(new ApplyForItem.Command { Id = id, Applicant = applicant, User = user });
 
             return NoContent();
         }
@@ -123,10 +123,10 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost("winner/{id}")]
-        public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] Applicant winner)
+        public async Task<IActionResult> ChooseWinner([FromRoute] Guid id, [FromBody] Guid WinnerId)
         {
             var user = await GetUser();
-            await Mediator.Send(new ChooseWinner.Command { User = user, Winner = winner, ItemId = id });
+            await Mediator.Send(new ChooseWinner.Command { User = user, WinnerId = WinnerId, ItemId = id });
             return NoContent();
         }
     }

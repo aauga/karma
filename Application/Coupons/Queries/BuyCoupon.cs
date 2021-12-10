@@ -44,7 +44,7 @@ namespace Application.Coupons.Queries
                     throw new NotFoundException(nameof(Coupon), request.CouponId);
                 }
 
-                if (user.KarmaPoints < coupon.Price)
+                if (user.Points < coupon.Price)
                 {
                     throw new NotEnoughCreditsException($"User doesnt have enough credits for {request.CouponId} coupon");
                 }
@@ -56,7 +56,7 @@ namespace Application.Coupons.Queries
                     throw new NotFoundException($"Sorry no more tickets available with id {request.CouponId}");
                 }
 
-                user.KarmaPoints -= coupon.Price;
+                user.Points -= coupon.Price;
                 _context.CouponCodes.Remove(code);
 
                 await _context.SaveChangesAsync();
