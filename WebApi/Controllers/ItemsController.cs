@@ -67,6 +67,17 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpPost("apply/{id}")]
+        public async Task<IActionResult> ApplyForItem([FromRoute] Guid id, [FromForm] Applicant applicant)
+        {
+            var user = await GetUser();
+
+            await Mediator.Send(new ApplyForItem.Command { ItemId = id, Applicant = applicant, User = user });
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpPost("rate/{id}")]
         public async Task<IActionResult> RateItem([FromRoute] Guid id ,[FromForm] Rating Rating)
         {
