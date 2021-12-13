@@ -7,10 +7,6 @@ namespace Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Uploaded",
-                table: "Items");
-
             migrationBuilder.AddColumn<bool>(
                 name: "IsReceived",
                 table: "Items",
@@ -24,13 +20,6 @@ namespace Persistence.Migrations
             migrationBuilder.DropColumn(
                 name: "IsReceived",
                 table: "Items");
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "Uploaded",
-                table: "Items",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
         }
     }
 }
