@@ -21,23 +21,23 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Applicant", b =>
                 {
-                    b.Property<string>("User")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("Item")
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApplicantId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasKey("UserId", "ItemId");
 
-                    b.HasKey("User", "Item");
+                    b.HasIndex("ItemId");
 
-                    b.HasIndex("Username");
-
-                    b.ToTable("Applicants");
+                    b.ToTable("Applicant");
                 });
 
             modelBuilder.Entity("Domain.Entities.Company", b =>
@@ -126,10 +126,13 @@ namespace Persistence.Migrations
                     b.Property<string>("Redeemer")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Uploaded")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Uploader")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserAuthId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("WinnerChosenRandomly")
@@ -137,7 +140,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Username");
+                    b.HasIndex("UserAuthId");
 
                     b.ToTable("Items");
                 });
@@ -180,37 +183,64 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
+                    b.Property<string>("AuthId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("KarmaPoints")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isVerified")
+                    b.Property<bool>("isAdmin")
                         .HasColumnType("bit");
 
-                    b.HasKey("Username");
+                    b.HasKey("AuthId");
+
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasFilter("[Username] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.Applicant", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithMany("Contributions")
-                        .HasForeignKey("Username");
+                    b.HasOne("Domain.Entities.Item", "Item")
+                        .WithMany("Applicants")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("Applications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.HasOne("Domain.Entities.User", null)
                         .WithMany("Listings")
-                        .HasForeignKey("Username");
+                        .HasForeignKey("UserAuthId");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Item", b =>
+                {
+                    b.Navigation("Applicants");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("Contributions");
+                    b.Navigation("Applications");
 
                     b.Navigation("Listings");
                 });
