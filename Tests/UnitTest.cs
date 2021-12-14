@@ -14,6 +14,7 @@ using Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Application.Users;
 using MediatR;
+using FluentAssertions;
 
 namespace Tests
 {
@@ -21,7 +22,7 @@ namespace Tests
     {
 
         [Fact]
-        public void TestItemQueryDetails()
+        public void Test_Item_Query_Details()
         {
             var query = new Details.Query();
             var token = new CancellationToken();
@@ -37,11 +38,13 @@ namespace Tests
             mycontext.Items.Add(item);
             mycontext.SaveChanges();
 
-            Assert.ThrowsAsync<NotFoundException>(() => new Details.Handler(mycontext).Handle(query, token)).Wait();
+            //Assert.ThrowsAsync<NotFoundException>(() => new Details.Handler(mycontext).Handle(query, token)).Wait();
+            Func<Task> task = async () => await new Details.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<NotFoundException>().Wait();
         }
 
         [Fact]
-        public void TestItemQueryGetApplicants1()
+        public void Test_Item_Query_GetApplicants_NotFoundException()
         {
             var query = new GetApplicants.Query();
             var token = new CancellationToken();
@@ -50,11 +53,13 @@ namespace Tests
             var mycontext = new ItemDbContext(builder.Options);
             mycontext.Database.EnsureDeleted();
 
-            Assert.ThrowsAsync<NotFoundException>(() => new GetApplicants.Handler(mycontext).Handle(query, token)).Wait();
+            //Assert.ThrowsAsync<NotFoundException>(() => new GetApplicants.Handler(mycontext).Handle(query, token)).Wait();
+            Func<Task> task = async () => await new GetApplicants.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<NotFoundException>().Wait();
         }
 
         [Fact]
-        public void TestItemQueryGetApplicants2()
+        public void Test_Item_Query_GetApplicants_UserDoesNotHaveAccessException()
         {
             var query = new GetApplicants.Query();
             var token = new CancellationToken();
@@ -72,11 +77,13 @@ namespace Tests
             mycontext.Items.Add(item);
             mycontext.SaveChanges();
 
-            Assert.ThrowsAsync<UserDoesNotHaveAccessException>(() => new GetApplicants.Handler(mycontext).Handle(query, token)).Wait();
+            //Assert.ThrowsAsync<UserDoesNotHaveAccessException>(() => new GetApplicants.Handler(mycontext).Handle(query, token)).Wait();
+            Func<Task> task = async () => await new GetApplicants.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<UserDoesNotHaveAccessException>().Wait();
         }
 
         [Fact]
-        public void TestItemQueryGetApplicants3()
+        public void Test_Item_Query_GetApplicants()
         {
             var query = new GetApplicants.Query();
             var token = new CancellationToken();
@@ -91,8 +98,13 @@ namespace Tests
             var item = new Item();
 
             Applicant a1 = new Applicant();
+            a1.UserId = "User 2";
             Applicant a2 = new Applicant();
+            a2.UserId = "User 3";
+
             item.Applicants = new List<Applicant>() { a1, a2 };
+            item.Id = query.ItemId;
+            item.Uploader = "User";
 
             mycontext.Items.Add(item);
             mycontext.SaveChanges();
@@ -100,11 +112,12 @@ namespace Tests
             var task = new GetApplicants.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            Assert.Equal(item.Applicants, task.Result);
+            //Assert.NotNull(task.Result);
+            task.Result.Should().NotBeNull();
         }
 
         [Fact]
-        public void TestItemQueryGetApplicants4()
+        public void Test_Item_Query_GetApplicants_Empty()
         {
             var query = new GetApplicants.Query();
             var token = new CancellationToken();
@@ -127,11 +140,12 @@ namespace Tests
             var task = new GetApplicants.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            Assert.Null(task.Result);
+            //Assert.Null(task.Result);
+            task.Result.Should().BeNull();
         }
 
         [Fact]
-        public void TestItemQueryList()
+        public void Test_Item_Query_List()
         {
             var query = new List.Query();
             var token = new CancellationToken();
@@ -151,11 +165,12 @@ namespace Tests
             var task = new List.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            Assert.Equal(items, task.Result);
+            //  Assert.Equal(items, task.Result);
+            task.Result.Should().BeEquivalentTo(items);
         }
 
         [Fact]
-        public void TestUserCommandOnRegister()
+        public void Test_User_Command_OnRegister()
         {
             var query = new OnRegister.Command();
             var token = new CancellationToken();
@@ -167,11 +182,12 @@ namespace Tests
             var task = new OnRegister.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            Assert.IsType<Unit>(task.Result);
+           // Assert.IsType<Unit>(task.Result);
+            task.Result.Should().Be(Unit.Value);
         }
 
         [Fact]
-        public void TestUserQueryGetUserApplications()
+        public void Test_User_Query_GetUserApplications()
         {
             var query = new GetUserApplications.Query();
             var token = new CancellationToken();
@@ -183,11 +199,12 @@ namespace Tests
             var task = new GetUserApplications.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            Assert.Null(task.Result);
+            //Assert.Null(task.Result);
+            task.Result.Should().BeNull();
         }
 
         [Fact]
-        public void TestUserQueryGetUserMetadata()
+        public void Test_User_Query_GetUserMetadata()
         {
             var query = new GetUserMetadata.Query();
             var token = new CancellationToken();
@@ -199,6 +216,7 @@ namespace Tests
             query.User = "User";
 
             User a1 = new User();
+            a1.AuthId = query.User;
 
             mycontext.Add(a1);
             mycontext.SaveChanges();
@@ -206,7 +224,8 @@ namespace Tests
             var task = new GetUserMetadata.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            Assert.Equal(query.User, task.Result.Username);
+            // Assert.Equal(query.User, task.Result.AuthId);
+            task.Result.AuthId.Should().BeEquivalentTo(query.User);
         }
     }
 }
