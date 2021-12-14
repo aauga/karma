@@ -35,7 +35,7 @@ namespace Application.Coupons.Commands
             {
                 var user = await _context.Users.FindAsync(request.User);
 
-                if (!user.isAdmin)
+                if (!user.IsAdmin)
                 {
                     throw new UnauthorizedAccessException($"User {user.Username} is not an Admin");
                 }
