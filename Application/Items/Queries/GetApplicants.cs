@@ -45,7 +45,7 @@ namespace Application.Items.Queries
 
                 var contributors = item.Applicants;
 
-                if(contributors.Any())
+                if(!contributors.Any())
                 {
                     return null;
                 }
