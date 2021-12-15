@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Users;
 using MediatR;
 using FluentAssertions;
+using Application.Items.Commands;
 
 namespace Tests
 {
@@ -207,10 +208,10 @@ namespace Tests
 
             query.User = "User";
 
-            User a1 = new User();
-            a1.AuthId = query.User;
+            User user = new User();
+            user.AuthId = query.User;
 
-            mycontext.Add(a1);
+            mycontext.Users.Add(user);
             mycontext.SaveChanges();
 
             var task = new GetUserMetadata.Handler(mycontext).Handle(query, token);
@@ -218,5 +219,107 @@ namespace Tests
 
             task.Result.AuthId.Should().BeEquivalentTo(query.User);
         }
+
+        [Fact]
+        public void Test_Item_Command_UnsuspendItem_NotFoundException()
+        {
+            var query = new UnsuspendItem.Command();
+            var token = new CancellationToken();
+
+            var builder = new DbContextOptionsBuilder<ItemDbContext>().UseInMemoryDatabase("db");
+            var mycontext = new ItemDbContext(builder.Options);
+            mycontext.Database.EnsureDeleted();
+
+            Func<Task> task = async () => await new UnsuspendItem.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<NotFoundException>().Wait();
+        }
+
+        [Fact]
+        public void Test_Item_Command_UnsuspendItem_ConflictException_ItemIsReceived()
+        {
+            var query = new UnsuspendItem.Command();
+            var token = new CancellationToken();
+
+            var builder = new DbContextOptionsBuilder<ItemDbContext>().UseInMemoryDatabase("db");
+            var mycontext = new ItemDbContext(builder.Options);
+            mycontext.Database.EnsureDeleted();
+
+            query.Id = Guid.NewGuid();
+         
+            var item = new Item();
+            item.Id = query.Id;
+            item.IsReceived = false;
+
+            mycontext.Items.Add(item);
+            mycontext.SaveChanges();
+
+            Func<Task> task = async () => await new UnsuspendItem.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<ConflictException>().Wait();
+        }
+
+        [Fact]
+        public void Test_Item_Command_Delete_NotFoundException()
+        {
+            var query = new Delete.Command();
+            var token = new CancellationToken();
+
+            var builder = new DbContextOptionsBuilder<ItemDbContext>().UseInMemoryDatabase("db");
+            var mycontext = new ItemDbContext(builder.Options);
+            mycontext.Database.EnsureDeleted();
+
+            Func<Task> task = async () => await new Delete.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<NotFoundException>().Wait();
+        }
+
+        [Fact]
+        public void Test_Item_Command_Delete_ConflictException()
+        {
+            var query = new Delete.Command();
+            var token = new CancellationToken();
+
+            var builder = new DbContextOptionsBuilder<ItemDbContext>().UseInMemoryDatabase("db");
+            var mycontext = new ItemDbContext(builder.Options);
+            mycontext.Database.EnsureDeleted();
+
+            query.Id = Guid.NewGuid();
+            query.User = "User";
+
+            var item = new Item();
+            var user = new User();
+            item.Id = query.Id;
+            item.Uploader = "User";
+            user.Username = "User1";
+            user.AuthId = query.User;
+
+            mycontext.Items.Add(item);
+            mycontext.Users.Add(user);
+            mycontext.SaveChanges();
+
+            Func<Task> task = async () => await new Delete.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<ConflictException>().Wait();
+        }
+
+        [Fact]
+        public void Test_Item_Command_ApplyForItem_NotFoundException()
+        {
+            var query = new Delete.Command();
+            var token = new CancellationToken();
+
+            var builder = new DbContextOptionsBuilder<ItemDbContext>().UseInMemoryDatabase("db");
+            var mycontext = new ItemDbContext(builder.Options);
+            mycontext.Database.EnsureDeleted();
+
+            query.User = "User";
+
+            var user = new User();
+            user.AuthId = query.User;
+
+            mycontext.Users.Add(user);
+            mycontext.SaveChanges();
+
+            Func<Task> task = async () => await new Delete.Handler(mycontext).Handle(query, token);
+            task.Should().ThrowAsync<NotFoundException>().Wait();
+        }
+
     }
 }
