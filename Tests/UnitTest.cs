@@ -38,7 +38,6 @@ namespace Tests
             mycontext.Items.Add(item);
             mycontext.SaveChanges();
 
-            //Assert.ThrowsAsync<NotFoundException>(() => new Details.Handler(mycontext).Handle(query, token)).Wait();
             Func<Task> task = async () => await new Details.Handler(mycontext).Handle(query, token);
             task.Should().ThrowAsync<NotFoundException>().Wait();
         }
@@ -53,7 +52,6 @@ namespace Tests
             var mycontext = new ItemDbContext(builder.Options);
             mycontext.Database.EnsureDeleted();
 
-            //Assert.ThrowsAsync<NotFoundException>(() => new GetApplicants.Handler(mycontext).Handle(query, token)).Wait();
             Func<Task> task = async () => await new GetApplicants.Handler(mycontext).Handle(query, token);
             task.Should().ThrowAsync<NotFoundException>().Wait();
         }
@@ -77,7 +75,6 @@ namespace Tests
             mycontext.Items.Add(item);
             mycontext.SaveChanges();
 
-            //Assert.ThrowsAsync<UserDoesNotHaveAccessException>(() => new GetApplicants.Handler(mycontext).Handle(query, token)).Wait();
             Func<Task> task = async () => await new GetApplicants.Handler(mycontext).Handle(query, token);
             task.Should().ThrowAsync<UserDoesNotHaveAccessException>().Wait();
         }
@@ -112,7 +109,6 @@ namespace Tests
             var task = new GetApplicants.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            //Assert.NotNull(task.Result);
             task.Result.Should().NotBeNull();
         }
 
@@ -140,7 +136,6 @@ namespace Tests
             var task = new GetApplicants.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            //Assert.Null(task.Result);
             task.Result.Should().BeNull();
         }
 
@@ -165,7 +160,6 @@ namespace Tests
             var task = new List.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            //  Assert.Equal(items, task.Result);
             task.Result.Should().BeEquivalentTo(items);
         }
 
@@ -182,7 +176,6 @@ namespace Tests
             var task = new OnRegister.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-           // Assert.IsType<Unit>(task.Result);
             task.Result.Should().Be(Unit.Value);
         }
 
@@ -199,7 +192,6 @@ namespace Tests
             var task = new GetUserApplications.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            //Assert.Null(task.Result);
             task.Result.Should().BeNull();
         }
 
@@ -224,7 +216,6 @@ namespace Tests
             var task = new GetUserMetadata.Handler(mycontext).Handle(query, token);
             task.Wait();
 
-            // Assert.Equal(query.User, task.Result.AuthId);
             task.Result.AuthId.Should().BeEquivalentTo(query.User);
         }
     }
