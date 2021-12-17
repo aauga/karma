@@ -15,7 +15,7 @@ const ListingPlaceholders: Function = ({ amount }: PlaceholderProps) => {
 
     for (let i = 1; i <= amount; i++) {
         list.push(
-            <StyledCol md={6} lg={4} xl={3}>
+            <StyledCol key={i} md={6} lg={4} xl={3}>
                 <CardSkeleton key={i} />
             </StyledCol>
         );
