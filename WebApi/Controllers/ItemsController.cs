@@ -8,6 +8,7 @@ using Domain.Entities;
 using Application.Items.Commands;
 using Application.Items.Commands.CreateItem;
 using Application.Items.Queries;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
@@ -34,6 +35,20 @@ namespace WebApi.Controllers
         public async Task<ActionResult<Item>> GetItem([FromRoute] Guid id)
         {
             return Ok(await Mediator.Send(new Details.Query { Id = id }));
+        }
+        
+        [HttpGet("random")]
+        public async Task<ActionResult<IEnumerable<Item>>> GetRandomItems([FromQuery] ItemCategories category = 0,
+            [FromQuery] int amount = 4)
+        {
+            var list = await Mediator.Send(new RandomListQuery {Category = category, Amount = amount});
+
+            if (!list.Any())
+            {
+                return NoContent();
+            }
+            
+            return Ok(list);
         }
         
         [HttpGet("filter")]
