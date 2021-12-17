@@ -15,16 +15,10 @@ namespace WebApi.Controllers
     public class ItemsController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult<object>> GetItems([FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
         {
-            var items = await Mediator.Send(new List.Query());
-
-            if (!items.Any())
-            {
-                return NoContent();
-            }
-
-            return Ok(items);
+            var obj = await Mediator.Send(new List.Query {Page = page, ItemsPerPage = itemsPerPage});
+            return Ok(obj);
         }
 
         [Authorize]
