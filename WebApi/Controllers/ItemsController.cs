@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Items;
 using Domain.Entities;
 using Application.Items.Commands;
+using Application.Items.Commands.CreateItem;
 using Application.Items.Queries;
 using Microsoft.AspNetCore.Authorization;
 
@@ -60,20 +61,9 @@ namespace WebApi.Controllers
         {
             var user = await GetUser();
             
-            await Mediator.Send(new Create.Command { Item = item, User = user });
+            await Mediator.Send(new CreateItemCommand { Item = item, User = user });
 
             // check how to implement Created()
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("apply/{id}")]
-        public async Task<IActionResult> ApplyForItem([FromRoute] Guid id, [FromForm] Applicant applicant)
-        {
-            var user = await GetUser();
-
-            await Mediator.Send(new ApplyForItem.Command { ItemId = id, Applicant = applicant, User = user });
-
             return NoContent();
         }
 
