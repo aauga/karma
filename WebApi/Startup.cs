@@ -21,6 +21,8 @@ using System.Security.Claims;
 using Services;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
+using Application;
+using FluentValidation.AspNetCore;
 using WebApi.Filters;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -43,10 +45,14 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplication();
+            
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddControllers();
+            services.AddControllers(options => 
+                    options.Filters.Add<ApiExceptionFilterAttribute>())
+                .AddFluentValidation();
 
             Log.Logger = new LoggerConfiguration()
                             .Enrich.FromLogContext()
@@ -76,15 +82,10 @@ namespace WebApi
                 opt.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
             });
 
-            services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddAutoMapper(typeof(Mapper).Assembly);
-
-
             Account account = new Account(_configuration["Cloudinary:Name"], _configuration["Cloudinary:ApiKey"], _configuration["Cloudinary:ApiSecret"]);
             Cloudinary cloudinary = new Cloudinary(account);
             cloudinary.Api.Secure = true;
             services.AddSingleton<IImageUpload, ImageUpload>(_ => new ImageUpload(cloudinary));
-
 
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -114,8 +115,6 @@ namespace WebApi
                app.UseDeveloperExceptionPage();
             }
             app.UseHangfireDashboard();
-
-            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseSerilogRequestLogging(options => {
                 options.MessageTemplate = "Handled {RequestPath}";
