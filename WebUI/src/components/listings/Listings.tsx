@@ -1,46 +1,69 @@
-import { Col } from 'react-bootstrap';
-import styled from 'styled-components';
-import Card from '../card/Card';
-import CardSkeleton from '../card/CardSkeleton';
+import { useState, useEffect } from 'react';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import useQuery from '../common/QueryParams';
+import LoadedListings from './LoadedListings';
+import ListingPlaceholders from './ListingPlaceholders';
+import Pagination from '../pagination/Pagination';
+import NotFound from '../common/NotFound';
+import NoContent from '../common/NoContent';
 
-interface Item {
-    name: string;
-    uploader: string;
-    imageUrls: string[];
-}
+const serverUrl = process.env.REACT_APP_SERVER_URL;
+const baseURL = `${serverUrl}/api/items`;
 
-interface Props {
-    list: Item[];
-}
+const obj = {
+    statusCode: 0,
+    response: {
+        pagination: {
+            totalPages: 0,
+            page: 0
+        },
+        items: []
+    }
+};
 
-const StyledCol = styled(Col)`
-    margin-bottom: 16px;
-`;
+const Listings = () => {
+    const query = useQuery();
+    const [res, setRes] = useState(obj);
 
-const Listings = ({ list }: Props) => {
-    const LoadSkeletons: Function = () => {
-        let skeletonList = [];
+    useEffect(() => {
+        axios
+            .get(baseURL, { params: { page: query.get('page'), itemsPerPage: query.get('itemsPerPage') } })
+            .then((resp: AxiosResponse) => setRes({ statusCode: resp.status, response: resp.data }))
+            .catch((err: AxiosError | Error) => {
+                if (axios.isAxiosError(err) && err.response) {
+                    setRes({ statusCode: err.response.status, response: { pagination: { totalPages: 0, page: 0 }, items: [] } });
+                } else {
+                    setRes({ statusCode: 500, response: { pagination: { totalPages: 0, page: 0 }, items: [] } });
+                }
+            });
 
-        for (let i = 1; i <= 8; i++) {
-            skeletonList.push(
-                <StyledCol md={6} lg={4} xl={3}>
-                    <CardSkeleton />
-                </StyledCol>
-            );
+        window.scrollTo(0, 0);
+    }, [query.get('page')]);
+
+    if (res.statusCode != 0) {
+        if (res.statusCode === 404) {
+            return <NotFound />;
         }
 
-        return skeletonList;
-    };
+        if (res.response.items.length === 0) {
+            return <NoContent />;
+        }
 
-    const LoadListings: Function = () => {
-        return list.map(item => (
-            <StyledCol md={6} lg={4} xl={3}>
-                <Card title={item.name || undefined} uploader={item.uploader || undefined} image={item.imageUrls[0]} />
-            </StyledCol>
-        ));
-    };
+        return (
+            <>
+                <h2 className={'mb-3'}>Newest items</h2>
+                <LoadedListings list={res.response.items} />
+                <Pagination props={res.response.pagination} />
+            </>
+        );
+    }
 
-    return list == null ? <LoadSkeletons /> : <LoadListings />;
+    return (
+        <>
+            <h2 className={'mb-3'}>Newest items</h2>
+            <ListingPlaceholders />
+        </>
+    );
 };
 
 export default Listings;
