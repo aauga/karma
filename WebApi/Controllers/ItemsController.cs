@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Application.Items;
 using Domain.Entities;
 using Application.Items.Commands;
+using Application.Items.Commands.CreateItem;
 using Application.Items.Queries;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
@@ -14,16 +16,10 @@ namespace WebApi.Controllers
     public class ItemsController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult<object>> GetItems([FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
         {
-            var items = await Mediator.Send(new List.Query());
-
-            if (!items.Any())
-            {
-                return NoContent();
-            }
-
-            return Ok(items);
+            var obj = await Mediator.Send(new List.Query {Page = page, ItemsPerPage = itemsPerPage});
+            return Ok(obj);
         }
 
         [Authorize]
@@ -39,6 +35,20 @@ namespace WebApi.Controllers
         public async Task<ActionResult<Item>> GetItem([FromRoute] Guid id)
         {
             return Ok(await Mediator.Send(new Details.Query { Id = id }));
+        }
+        
+        [HttpGet("random")]
+        public async Task<ActionResult<IEnumerable<Item>>> GetRandomItems([FromQuery] ItemCategories category = 0,
+            [FromQuery] int amount = 4)
+        {
+            var list = await Mediator.Send(new RandomListQuery {Category = category, Amount = amount});
+
+            if (!list.Any())
+            {
+                return NoContent();
+            }
+            
+            return Ok(list);
         }
         
         [HttpGet("filter")]
@@ -60,20 +70,9 @@ namespace WebApi.Controllers
         {
             var user = await GetUser();
             
-            await Mediator.Send(new Create.Command { Item = item, User = user });
+            await Mediator.Send(new CreateItemCommand { Item = item, User = user });
 
             // check how to implement Created()
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("apply/{id}")]
-        public async Task<IActionResult> ApplyForItem([FromRoute] Guid id, [FromForm] Applicant applicant)
-        {
-            var user = await GetUser();
-
-            await Mediator.Send(new ApplyForItem.Command { ItemId = id, Applicant = applicant, User = user });
-
             return NoContent();
         }
 

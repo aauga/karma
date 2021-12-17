@@ -3,8 +3,9 @@ using Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Hangfire;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -17,26 +18,52 @@ namespace Services
             _context = context;
         }
 
-        public async Task ChooseWinner(Guid itemId)
+        public async Task StartSelection(Guid itemId)
         {
-            var item = await _context.Items.FindAsync(itemId);
-            var applicants = item.Applicants;
+            var item = await _context.Items
+                .Include(x => x.Applicants)
+                .ThenInclude(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == itemId);
+
+            if (item != null)
+            {
+                var applicants = item.Applicants;
+
+                if (applicants == null || applicants.Count == 0)
+                {
+                    ExtendOrSuspend(item);
+                }
+                else
+                {
+                    PickWinner(item, applicants);
+                }
             
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public void ExtendOrSuspend(Item item)
+        {
+            if (item.WinnerChosenRandomly)
+            {
+                item.ExpirationDate = DateTime.Now.AddMinutes(30);
+                BackgroundJob.Schedule(() => StartSelection(item.Id), TimeSpan.FromMinutes(30));
+            }
+            else
+            {
+                item.IsSuspended = true;
+            }
+        }
+
+        public void PickWinner(Item item, ICollection<Applicant> applicants)
+        {
             var rand = new Random();
             var winnerIndex = rand.Next(0, applicants.Count);
-
-            var winner = applicants.Skip(winnerIndex).First();
+            
+            var winner = applicants.ElementAt(winnerIndex);
             item.Redeemer = winner.User.Username;
             
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task SuspendItem(Guid ItemId)
-        {
-            var item = await _context.Items.FindAsync(ItemId);
             item.IsSuspended = true;
-            await _context.SaveChangesAsync();
         }
-        
     }
 }

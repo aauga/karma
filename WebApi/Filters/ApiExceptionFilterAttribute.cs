@@ -15,8 +15,10 @@ namespace WebApi.Filters
         {
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
+                { typeof(ValidationException), HandleValidationException },
                 { typeof(NotFoundException), HandleNotFoundException },
-                { typeof(ConflictException), HandleConflictException }
+                { typeof(ConflictException), HandleConflictException },
+                { typeof(UnknownException), HandleUnknownException }
             };
         }
 
@@ -49,6 +51,20 @@ namespace WebApi.Filters
         private void HandleInvalidModelStateException(ExceptionContext context)
         {
             var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+            };
+
+            context.Result = new BadRequestObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+        
+        private void HandleValidationException(ExceptionContext context)
+        {
+            var exception = context.Exception as ValidationException;
+
+            var details = new ValidationProblemDetails(exception.Errors)
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
             };
