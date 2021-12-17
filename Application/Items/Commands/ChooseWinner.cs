@@ -35,6 +35,7 @@ namespace Application.Items.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                /*
                 var item = await _context.Items.FindAsync(request.ItemId);
                 var winner = item.Applicants.Where(applicant => applicant.ApplicantId == request.WinnerId).First();
 
@@ -73,6 +74,7 @@ namespace Application.Items.Commands
                 
                 item.Redeemer = winner.User.AuthId;
                 item.IsSuspended = true;
+                */
                 
                 await _context.SaveChangesAsync();
 

@@ -4,7 +4,6 @@ namespace Domain.Entities
 {
     public class Applicant
     {
-        public Guid ApplicantId { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
         public Guid ItemId { get; set; }
