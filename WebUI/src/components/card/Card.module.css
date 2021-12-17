@@ -1,5 +1,14 @@
 .wrapText {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.link {
+    color: #000000;
+    text-decoration: none;
+}
+
+.link:hover {
+    color: #000000;
 }

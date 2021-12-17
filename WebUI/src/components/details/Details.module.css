@@ -1,0 +1,44 @@
+.title {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.cardBody {
+    padding: 0 1rem;
+}
+
+.h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 15px;
+}
+
+.mt5 {
+    margin-top: 2rem;
+}
+
+#mobile {
+    display: none;
+}
+
+#mobileCarousel {
+    margin-top: 0;
+}
+
+@media (max-width: 992px) {
+    .cardBody {
+        padding: 0;
+    }
+
+    #mobile {
+        margin-top: 1rem;
+        display: block;
+    }
+
+    #mobileCarousel {
+        margin-top: 2rem;
+    }
+
+    #web {
+        display: none;
+    }
+}
