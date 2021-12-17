@@ -31,12 +31,24 @@ namespace Application.Items.Queries
 
             public async Task<IEnumerable<Applicant>> Handle(Query request, CancellationToken cancellationToken)
             {
+                
                 var item = await _context.Items.FindAsync(request.ItemId);
+
+                if(item == null)
+                {
+                    throw new NotFoundException(nameof(Item), request.ItemId);
+                }
                 if(item.Uploader != request.User)
                 {
-                    throw new ConflictException($"Item {request.ItemId} does not belong to the client");
+                    throw new UserDoesNotHaveAccessException($"User {request.User} does not have access to this");
                 }
-                var contributors = await _context.Applicants.Where(s => s.ListingId == request.ItemId).ToListAsync();
+
+                var contributors = item.Applicants;
+
+                if(!contributors.Any())
+                {
+                    return null;
+                }
 
                 return contributors;
             }

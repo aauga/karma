@@ -10,8 +10,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    [Migration("20211201083419_ItemReceived")]
-    partial class ItemReceived
+    [Migration("20211207224050_EditApplicationProps")]
+    partial class EditApplicationProps
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,10 +26,10 @@ namespace Persistence.Migrations
                     b.Property<string>("User")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("ListingId")
+                    b.Property<Guid>("Item")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Reasoning")
+                    b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
@@ -60,9 +60,6 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsReceived")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsSuspended")
                         .HasColumnType("bit");
 
@@ -71,6 +68,9 @@ namespace Persistence.Migrations
 
                     b.Property<string>("Redeemer")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Uploaded")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Uploader")
                         .HasColumnType("nvarchar(max)");

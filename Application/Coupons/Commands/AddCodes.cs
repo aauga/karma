@@ -13,15 +13,14 @@ using Application.Core;
 using Application.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Items.Commands
+namespace Application.Coupons.Commands
 {
-    public class ApplyForItem
+    public class AddCodes
     {
         public class Command : IRequest
         {
             public string User { get; set; }
-            public Guid ItemId { get; set; }
-            public Applicant Applicant { get; set; }
+            public List<CouponCode> Codes { get; set; }
         }
         public class Handler : IRequestHandler<Command>
         {
@@ -34,23 +33,14 @@ namespace Application.Items.Commands
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var item = await _context.Items.FindAsync(request.ItemId);
                 var user = await _context.Users.FindAsync(request.User);
-                
-                if(item == null)
+
+                if(!user.IsAdmin)
                 {
-                    throw new NotFoundException(nameof(Item), request.ItemId); 
-                }
-                
-                if(user == null)
-                {
-                    throw new NotFoundException(nameof(User), request.User); 
+                    throw new UnauthorizedAccessException($"User {user.Username} is not an Admin");
                 }
 
-                request.Applicant.User = user;
-                request.Applicant.Item = item;
-
-                item.Applicants.Add(request.Applicant);
+                request.Codes.ForEach(code => _context.CouponCodes.Add(code));
 
                 await _context.SaveChangesAsync();
 

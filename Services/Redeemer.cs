@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -12,20 +11,23 @@ namespace Services
     public class Redeemer
     {
         private readonly ItemDbContext _context;
-        private readonly PointGiver _pointGiver;
-
-        public Redeemer(ItemDbContext context , PointGiver pointGiver)
+        
+        public Redeemer(ItemDbContext context)
         {
             _context = context;
         }
 
-        public async Task ChooseWinnerRandomly(Guid ItemId)
+        public async Task ChooseWinner(Guid itemId)
         {
+            var item = await _context.Items.FindAsync(itemId);
+            var applicants = item.Applicants;
+            
             var rand = new Random();
-            var contributors = await _context.Applicants.Where(s => s.ListingId == ItemId).ToListAsync();
-            int winnerIndex = rand.Next(0, contributors.Count-1);
-            var item = await _context.Items.FindAsync(ItemId);
-            item.Redeemer = contributors[winnerIndex].User;
+            var winnerIndex = rand.Next(0, applicants.Count);
+
+            var winner = applicants.Skip(winnerIndex).First();
+            item.Redeemer = winner.User.Username;
+            
             await _context.SaveChangesAsync();
         }
 

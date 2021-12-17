@@ -30,7 +30,7 @@ namespace Application.Items.Queries
 
                 if (item == null)
                 {
-                    throw new NotFoundException($"Item {item.Id} does not exist");
+                    throw new NotFoundException($"Item {request.Id} does not exist");
                 }
 
                 return item;

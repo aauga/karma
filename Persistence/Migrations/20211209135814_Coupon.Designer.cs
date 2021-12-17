@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ItemDbContext))]
-    partial class ItemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211209135814_Coupon")]
+    partial class Coupon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,23 +23,23 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Applicant", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("User")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("ItemId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ApplicantId")
+                    b.Property<Guid>("Item")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "ItemId");
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("ItemId");
+                    b.HasKey("User", "Item");
 
-                    b.ToTable("Applicant");
+                    b.HasIndex("Username");
+
+                    b.ToTable("Applicants");
                 });
 
             modelBuilder.Entity("Domain.Entities.Company", b =>
@@ -126,13 +128,10 @@ namespace Persistence.Migrations
                     b.Property<string>("Redeemer")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Uploaded")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Uploader")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserAuthId")
+                    b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("WinnerChosenRandomly")
@@ -140,7 +139,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserAuthId");
+                    b.HasIndex("Username");
 
                     b.ToTable("Items");
                 });
@@ -183,64 +182,37 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Property<string>("AuthId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("isAdmin")
+                    b.Property<int>("KarmaPoints")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isVerified")
                         .HasColumnType("bit");
 
-                    b.HasKey("AuthId");
-
-                    b.HasIndex("Username")
-                        .IsUnique()
-                        .HasFilter("[Username] IS NOT NULL");
+                    b.HasKey("Username");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.Applicant", b =>
                 {
-                    b.HasOne("Domain.Entities.Item", "Item")
-                        .WithMany("Applicants")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("Applications")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("User");
+                    b.HasOne("Domain.Entities.User", null)
+                        .WithMany("Contributions")
+                        .HasForeignKey("Username");
                 });
 
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.HasOne("Domain.Entities.User", null)
                         .WithMany("Listings")
-                        .HasForeignKey("UserAuthId");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Item", b =>
-                {
-                    b.Navigation("Applicants");
+                        .HasForeignKey("Username");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("Applications");
+                    b.Navigation("Contributions");
 
                     b.Navigation("Listings");
                 });

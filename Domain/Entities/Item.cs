@@ -24,5 +24,6 @@ namespace Domain.Entities
         public string Uploader { get; set; }
         public string Redeemer { get; set; }
         public DateTime Uploaded { get; set; }
+        public ICollection<Applicant> Applicants { get; set; }
     }
 }
