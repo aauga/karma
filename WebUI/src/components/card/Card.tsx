@@ -1,37 +1,38 @@
+import { Link } from 'react-router-dom';
 import { ImageDiv, InformationDiv, Image, Information, Title, Uploader, Stats } from './Card.styles';
 import styles from './Card.module.css';
-import HeartButton from './HeartButton';
+import HeartButton from '../common/HeartButton';
 
 interface CardProps {
+    itemId: string;
     title: string;
     uploader: string;
     image?: string;
 }
 
-const defaultProps: CardProps = {
-    title: 'Unspecified item',
-    uploader: 'Unknown uploader'
-};
-
 const Card = (props: CardProps) => {
     return (
         <div>
-            <ImageDiv>
-                <Image src={props.image} />
-            </ImageDiv>
+            <Link className={styles.link} to={`/details/${props.itemId}`} onClick={() => window.scrollTo(0, 0)}>
+                <ImageDiv>
+                    <Image src={props.image} />
+                </ImageDiv>
+            </Link>
             <InformationDiv>
                 <Information>
-                    <Title className={styles.wrapText}>{props.title}</Title>
+                    <Title className={styles.wrapText}>
+                        <Link className={styles.link} to={`/details/${props.itemId}`} onClick={() => window.scrollTo(0, 0)}>
+                            {props.title}
+                        </Link>
+                    </Title>
                     <Uploader className={styles.wrapText}>{props.uploader}</Uploader>
                 </Information>
                 <Stats>
-                    <HeartButton />
+                    <HeartButton size={16} />
                 </Stats>
             </InformationDiv>
         </div>
     );
 };
-
-Card.defaultProps = defaultProps;
 
 export default Card;
