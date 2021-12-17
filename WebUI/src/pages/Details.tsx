@@ -85,7 +85,7 @@ const Details = () => {
             .then(res => {
                 setItemRes({ statusCode: res.status, response: res.data });
 
-                if (!res.data.isSuspended || moment(res.data.expirationDate).diff(moment()) > 0) {
+                if (!res.data.isSuspended && moment(res.data.expirationDate).diff(moment()) > 0) {
                     setTimeout(() => window.location.reload(), moment(res.data.expirationDate).diff(moment()));
                 }
             })
