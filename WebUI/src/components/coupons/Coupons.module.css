@@ -1,0 +1,21 @@
+.company {
+    height: 0;
+    padding-bottom: 50%;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.company img {
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    object-fit: cover;
+}
+
+.column:not(:last-child) {
+    margin-bottom: 1rem;
+}
