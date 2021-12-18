@@ -22,7 +22,7 @@ p {
     font-family: 'Raleway';
     font-size: 12px;
     font-weight: 700;
-    height: 35px;
+    min-height: 35px;
 }
 
 .btn-primary,
