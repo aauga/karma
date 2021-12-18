@@ -14,6 +14,5 @@ namespace Domain.Entities
         public string ActivationCode { get; set; }
         [ForeignKey("Coupon")]
         public Guid CouponId { get; set; }
-        public string Redeemer { get; set; }
     }
 }
