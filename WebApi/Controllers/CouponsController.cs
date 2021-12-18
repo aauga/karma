@@ -1,7 +1,6 @@
 ﻿using Application.Coupons.Commands;
 using Application.Coupons.Queries;
 using Domain.Entities;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,10 +14,24 @@ namespace WebApi.Controllers
     public class CouponsController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<object>> GetCoupons([FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
+        public async Task<ActionResult<object>> GetCoupons([FromQuery] Guid companyId, [FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
         {
-            return Ok(await Mediator.Send(new GetCoupons.Query {Page = page, ItemsPerPage = itemsPerPage}));
+            return Ok(await Mediator.Send(new GetCoupons.Query {CompanyId = companyId, Page = page, ItemsPerPage = itemsPerPage}));
         }
+        
+        [HttpGet("companies")]
+        public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
+        {
+            var companies = await Mediator.Send(new GetCompaniesQuery());
+
+            if (!companies.Any())
+            {
+                return NoContent();
+            }
+            
+            return Ok(companies);
+        }
+        
 
         [Authorize]
         [HttpPost("redeem/{id}")]

@@ -16,6 +16,7 @@ namespace Application.Coupons.Queries
     {
         public class Query : IRequest<object>
         {
+            public Guid CompanyId { get; set; }
             public uint Page { get; set; }
             public uint ItemsPerPage { get; set; }
         }
@@ -30,7 +31,8 @@ namespace Application.Coupons.Queries
             public Task<object> Handle(Query request, CancellationToken cancellationToken)
             {
                 var coupons = _context.Coupons
-                    .Where(x => _context.CouponCodes.Any(y => x.Id == y.CouponId))
+                    .Where(x => x.CompanyId == request.CompanyId &&
+                                _context.CouponCodes.Any(y => x.Id == y.CouponId))
                     .OrderByDescending(x => x.Uploaded)
                     .Skip((int) ((request.Page - 1) * request.ItemsPerPage))
                     .Take((int) request.ItemsPerPage)
