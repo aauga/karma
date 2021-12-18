@@ -14,11 +14,9 @@ namespace WebApi.Controllers
     public class CouponsController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CouponResponse>>> GetCoupons()
+        public async Task<ActionResult<object>> GetCoupons([FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
         {
-            var Coupons = await Mediator.Send(new GetCoupons.Query());
-
-            return Ok(Coupons);
+            return Ok(await Mediator.Send(new GetCoupons.Query {Page = page, ItemsPerPage = itemsPerPage}));
         }
 
         [Authorize]
