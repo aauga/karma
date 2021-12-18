@@ -19,7 +19,7 @@ const StyledCol = styled(Col)`
 
 const LoadedListings: Function = ({ list }: Props) => {
     return list.map((item: Item) => (
-        <StyledCol key={item.id} md={6} lg={4} xl={3}>
+        <StyledCol key={item.id} xs={6} lg={4} xl={3}>
             <Card
                 itemId={item.id}
                 title={item.name || 'Unknown name'}
