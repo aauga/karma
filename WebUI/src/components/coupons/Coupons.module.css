@@ -14,8 +14,55 @@
     top: 0;
     bottom: 0;
     object-fit: cover;
+    max-height: 175px;
 }
 
 .column:not(:last-child) {
     margin-bottom: 1rem;
+}
+
+/* Everything related to coupons */
+.primaryText {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #885df1;
+}
+
+#row {
+    margin: inherit;
+}
+
+#couponName {
+    margin: 0;
+    font-size: 32px;
+}
+
+#couponImage {
+    height: 175px;
+    background-color: #aeaeae;
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 0;
+    margin-right: 2rem;
+}
+
+#couponImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#amount {
+    margin-left: 2rem;
+}
+
+@media (max-width: 992px) {
+    #row {
+        margin: auto;
+    }
+
+    #rightSide {
+        margin-top: 0.5rem;
+    }
 }

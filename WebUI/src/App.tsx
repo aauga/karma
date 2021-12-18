@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Details from './pages/Details';
+import Companies from './pages/Companies';
 import Coupons from './pages/Coupons';
 import AddListing from './pages/AddListing';
 import Loading from './components/loading';
@@ -27,7 +28,8 @@ const App = () => {
             <Switch>
                 <Route path='/' exact component={Home} />
                 <Route path='/details/:id' exact component={Details} />
-                <Route path='/coupons' exact component={Coupons} />
+                <Route path='/coupons' exact component={Companies} />
+                <Route path='/coupons/:id' exact component={Coupons} />
                 <ProtectedRoute path='/addlisting' component={AddListing} />
                 <ProtectedRoute path='/profile' component={Profile} />
                 <Route component={NotFound} />

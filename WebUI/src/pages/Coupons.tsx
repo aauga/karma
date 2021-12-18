@@ -1,85 +1,51 @@
-import { useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { Container, Button, Stack, Row, Col } from 'react-bootstrap';
-import CouponCompanies from '../components/coupons/CouponCompanies';
-import CouponConfirmationModal from '../components/coupons/CouponConfirmation';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Container, Stack } from 'react-bootstrap';
+import axios from 'axios';
+import useQuery from '../components/common/QueryParams';
+import CompanyList from '../components/coupons/LoadedCompanies';
+import CouponList from '../components/coupons/LoadedCoupons';
+
+const serverUrl = process.env.REACT_APP_SERVER_URL;
+
+const couponsObj = {
+    statusCode: 0,
+    response: {
+        coupons: []
+    }
+};
 
 const Coupons = () => {
-    const [showModal, setShowModal] = useState(false);
-    const { isAuthenticated } = useAuth0();
+    const query = useQuery();
+    const { id } = useParams<{ id: string }>();
+    const [coupons, setCoupons] = useState(couponsObj);
 
-    const hideModal = () => setShowModal(false);
+    const getCompanies = async () => {
+        try {
+            const res = await axios.get(serverUrl + `/api/coupons/${id}`, {
+                params: { page: query.get('page'), itemsPerPage: query.get('itemsPerPage') }
+            });
 
-    const FillWithItems: Function = () => {
-        let list = [];
-
-        for (let i = 0; i < 5; i++) {
-            list.push(
-                <Row className='align-items-center m-auto'>
-                    <Col
-                        md={4}
-                        lg={3}
-                        style={{
-                            marginRight: '2rem',
-                            backgroundColor: '#aeaeae',
-                            height: '175px',
-                            borderRadius: '4px',
-                            overflow: 'hidden',
-                            padding: '0'
-                        }}
-                    >
-                        <img
-                            src={'https://cdn.wolt.com/og_image_mall_web.jpg'}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                    </Col>
-
-                    <Col className='p-0 mt-sm-2 mt-md-0'>
-                        <Row className='align-items-center justify-content-between'>
-                            <Col lg={8}>
-                                <div>
-                                    <span style={{ fontFamily: 'Raleway', fontWeight: 600, fontSize: '15px', color: '#885df1' }}>Wolt</span>
-                                    <h3 style={{ margin: '0', fontSize: '32px' }}>-5€ discount on all orders</h3>
-                                </div>
-                                <p className='mt-3'>
-                                    Get a 5€ coupon code from all orders in Wolt!Get a 5€ coupon code from all orders in Wolt!Get a 5€
-                                    coupon code from all orders in Wolt!
-                                </p>
-                            </Col>
-                            <Col xs={2} lg={2} style={{ width: 'auto' }}>
-                                <div style={{ fontFamily: 'Raleway', fontWeight: 600, fontSize: '15px', color: '#885df1' }}>Price</div>
-                                <span>10 KP</span>
-                            </Col>
-                            <Col xs={10} lg={2} style={{ width: 'auto' }}>
-                                <Button
-                                    style={{ padding: '0.75rem 1.5rem' }}
-                                    onClick={() => setShowModal(true)}
-                                    disabled={!isAuthenticated}
-                                >
-                                    Redeem
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            );
+            setCoupons({ statusCode: res.status, response: res.data });
+        } catch (e) {
+            console.log(e);
         }
-
-        return list;
     };
 
-    return (
-        <>
-            <CouponConfirmationModal state={showModal} changeState={hideModal} />
-            <Container>
-                <CouponCompanies />
-                <h2 className='mt-3'>Available coupons</h2>
+    useEffect(() => {
+        getCompanies();
+    }, [id]);
 
-                <Stack className='my-4' gap={4}>
-                    <FillWithItems />
-                </Stack>
-            </Container>
-        </>
+    return (
+        <Container>
+            <CompanyList />
+
+            <h2 className='mt-5'>Coupons</h2>
+
+            <Stack gap={4} className='mt-3'>
+                <CouponList data={coupons.response.coupons} />
+            </Stack>
+        </Container>
     );
 };
 

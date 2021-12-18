@@ -3,15 +3,14 @@ import { toast } from 'react-toastify';
 import styles from './CouponModal.module.css';
 
 interface ModalProps {
+    couponId: string;
     state: boolean;
     changeState: () => void;
 }
 
-const CouponCodeModal = ({ state, changeState }: ModalProps) => {
-    const code = 'URNADUCA';
-
+const CouponCodeModal = ({ couponId, state, changeState }: ModalProps) => {
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(code);
+        navigator.clipboard.writeText(couponId);
         toast.success('Copied code to clipboard! 📋', { autoClose: 2500, hideProgressBar: true });
         changeState();
     };
@@ -24,7 +23,7 @@ const CouponCodeModal = ({ state, changeState }: ModalProps) => {
             <Modal.Body id={styles.body} className='text-center'>
                 Here is your coupon. Have fun!
                 <div id={styles.codeBox} className='py-2 px-3' onClick={copyToClipboard}>
-                    {code}
+                    {couponId}
                 </div>
             </Modal.Body>
             <Modal.Footer id={styles.footer}>
