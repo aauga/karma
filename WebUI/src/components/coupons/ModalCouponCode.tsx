@@ -13,6 +13,7 @@ const CouponCodeModal = ({ couponId, state, changeState }: ModalProps) => {
         navigator.clipboard.writeText(couponId);
         toast.success('Copied code to clipboard! 📋', { autoClose: 2500, hideProgressBar: true });
         changeState();
+        window.location.reload();
     };
 
     return (

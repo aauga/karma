@@ -8,7 +8,7 @@ const StyledPlaceholder = styled(Placeholder)`
     cursor: default;
 `;
 
-const CouponCompanyPlaceholders = () => {
+const CompanyPlaceholders = () => {
     var list: any = [];
 
     for (let i = 0; i < 4; i++) {
@@ -24,4 +24,4 @@ const CouponCompanyPlaceholders = () => {
     return list;
 };
 
-export default CouponCompanyPlaceholders;
+export default CompanyPlaceholders;

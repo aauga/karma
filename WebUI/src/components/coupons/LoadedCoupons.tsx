@@ -109,7 +109,7 @@ const LoadedCoupons: Function = ({ data }: ListProps) => {
                                     onClick={() => setModal({ selectedCoupon: coupon, showModal: true })}
                                     disabled={!isAuthenticated || userRes.response.points < coupon.price}
                                 >
-                                    {userRes.response.points < coupon.price ? 'No balance' : 'Redeem'}
+                                    {isAuthenticated && userRes.response.points < coupon.price ? 'No balance' : 'Redeem'}
                                 </Button>
                             </Col>
                         </Row>
