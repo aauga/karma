@@ -39,7 +39,7 @@ namespace WebApi.Middleware
                     case ConflictException e:
                         context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
-                    case NotEnoughCreditsException e:
+                    case BadRequestException e:
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     case UserDoesNotHaveAccessException e:
