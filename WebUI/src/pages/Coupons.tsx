@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { Container, Button, Stack, Row, Col, Modal } from 'react-bootstrap';
-import ConfirmationModal from '../components/coupons/CouponConfirmation';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Container, Button, Stack, Row, Col } from 'react-bootstrap';
+import CouponCompanies from '../components/coupons/CouponCompanies';
+import CouponConfirmationModal from '../components/coupons/CouponConfirmation';
 
 const Coupons = () => {
     const [showModal, setShowModal] = useState(false);
+    const { isAuthenticated } = useAuth0();
 
     const hideModal = () => setShowModal(false);
 
@@ -48,7 +51,11 @@ const Coupons = () => {
                                 <span>10 KP</span>
                             </Col>
                             <Col xs={10} lg={2} style={{ width: 'auto' }}>
-                                <Button style={{ padding: '0.75rem 1.5rem' }} onClick={() => setShowModal(true)}>
+                                <Button
+                                    style={{ padding: '0.75rem 1.5rem' }}
+                                    onClick={() => setShowModal(true)}
+                                    disabled={!isAuthenticated}
+                                >
                                     Redeem
                                 </Button>
                             </Col>
@@ -63,8 +70,9 @@ const Coupons = () => {
 
     return (
         <>
-            <ConfirmationModal state={showModal} changeState={hideModal} />
+            <CouponConfirmationModal state={showModal} changeState={hideModal} />
             <Container>
+                <CouponCompanies />
                 <h2 className='mt-3'>Available coupons</h2>
 
                 <Stack className='my-4' gap={4}>
