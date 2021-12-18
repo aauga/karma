@@ -30,7 +30,7 @@ namespace Application.Coupons.Queries
             public Task<object> Handle(Query request, CancellationToken cancellationToken)
             {
                 var coupons = _context.Coupons
-                    .Where(x => _context.CouponCodes.Any(y => x.Id == y.CouponId && y.Redeemer == null))
+                    .Where(x => _context.CouponCodes.Any(y => x.Id == y.CouponId))
                     .OrderByDescending(x => x.Uploaded)
                     .Skip((int) ((request.Page - 1) * request.ItemsPerPage))
                     .Take((int) request.ItemsPerPage)
@@ -47,7 +47,7 @@ namespace Application.Coupons.Queries
                             CouponName = coupon.Name,
                             CouponId = coupon.Id,
                             Uploaded = coupon.Uploaded,
-                            Amount = _context.CouponCodes.Count(x => x.CouponId == coupon.Id && x.Redeemer == null)
+                            Amount = _context.CouponCodes.Count(x => x.CouponId == coupon.Id)
                         }
                     );
                 
