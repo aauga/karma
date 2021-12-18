@@ -1,0 +1,25 @@
+#header {
+    padding: 1.5rem;
+    border-bottom: 0;
+}
+
+#title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+}
+
+#body {
+    padding: 0 1.5rem;
+}
+
+#footer {
+    border-top: 0;
+    flex-wrap: nowrap;
+    padding: 0.75rem 1.5rem 1.5rem 1.5rem;
+}
+
+.markText {
+    font-weight: 600;
+    color: #885df1;
+}
