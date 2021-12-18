@@ -13,10 +13,10 @@ namespace WebApi.Controllers
 {
     public class CouponsController : BaseApiController
     {
-        [HttpGet]
-        public async Task<ActionResult<object>> GetCoupons([FromQuery] Guid companyId, [FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<object>> GetCoupons([FromRoute] Guid id, [FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
         {
-            return Ok(await Mediator.Send(new GetCoupons.Query {CompanyId = companyId, Page = page, ItemsPerPage = itemsPerPage}));
+            return Ok(await Mediator.Send(new GetCoupons.Query {CompanyId = id, Page = page, ItemsPerPage = itemsPerPage}));
         }
         
         [HttpGet("companies")]
