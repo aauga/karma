@@ -61,7 +61,7 @@ const Listings = () => {
     return (
         <>
             <h2 className={'mb-3'}>Newest items</h2>
-            <ListingPlaceholders />
+            <ListingPlaceholders amount={8} />
         </>
     );
 };

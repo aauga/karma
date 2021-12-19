@@ -63,7 +63,7 @@ const StyledCollapse = styled(Navbar.Collapse)`
     }
 `;
 
-const StyledNavLink = styled(Nav.Link)`
+const StyledLink = styled(Link)`
     padding: 0 8px;
     margin-right: 8px;
 
@@ -85,30 +85,23 @@ const NavigationBar = () => {
     return (
         <StyledNavbar expand='lg' variant='light'>
             <Container>
-                <StyledNavbar.Brand href='#home'>
+                <Link to='/' className='nav-link'>
                     <img src={logo} alt='logo' />
-                </StyledNavbar.Brand>
+                </Link>
+
                 <StyledToggle aria-controls='responsive-navbar-nav' />
                 <StyledCollapse id='responsive-navbar-nav'>
                     <Nav id='nav-left' className='me-auto'>
-                        <StyledNavLink>
-                            <Link to='/' className='nav-link'>
-                                Home
-                            </Link>
-                        </StyledNavLink>
+                        <StyledLink to='/' className='nav-link'>
+                            Browse
+                        </StyledLink>
+                        <StyledLink to='/coupons' className='nav-link'>
+                            Coupons
+                        </StyledLink>
                         {isAuthenticated && (
-                            <StyledNavLink>
-                                <Link to='/profile' className='nav-link'>
-                                    Profile
-                                </Link>
-                            </StyledNavLink>
-                        )}
-                        {isAuthenticated && (
-                            <StyledNavLink>
-                                <Link to='/addlisting' className='nav-link'>
-                                    Add Listing
-                                </Link>
-                            </StyledNavLink>
+                            <StyledLink to='/addlisting' className='nav-link'>
+                                Add Listing
+                            </StyledLink>
                         )}
                     </Nav>
                     <Nav id='nav-right'>
