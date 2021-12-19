@@ -1,5 +1,4 @@
 import { Button, Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 import styles from './CouponModal.module.css';
 
 interface ModalProps {
@@ -11,7 +10,6 @@ interface ModalProps {
 const CouponCodeModal = ({ couponId, state, changeState }: ModalProps) => {
     const copyToClipboard = () => {
         navigator.clipboard.writeText(couponId);
-        toast.success('Copied code to clipboard! 📋', { autoClose: 2500, hideProgressBar: true });
         changeState();
         window.location.reload();
     };
