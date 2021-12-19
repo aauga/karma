@@ -6,7 +6,7 @@ import HeartButton from '../common/HeartButton';
 interface CardProps {
     itemId: string;
     title: string;
-    uploader: string;
+    city: string;
     image?: string;
 }
 
@@ -25,7 +25,7 @@ const Card = (props: CardProps) => {
                             {props.title}
                         </Link>
                     </Title>
-                    <Uploader className={styles.wrapText}>{props.uploader}</Uploader>
+                    <Uploader className={styles.wrapText}>{props.city}</Uploader>
                 </Information>
                 <Stats>
                     <HeartButton size={16} />

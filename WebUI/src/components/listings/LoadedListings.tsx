@@ -5,7 +5,7 @@ import Card from '../card/Card';
 interface Item {
     id: string;
     name: string;
-    uploader: string;
+    city: string;
     imageUrls: string[];
 }
 
@@ -20,12 +20,7 @@ const StyledCol = styled(Col)`
 const LoadedListings: Function = ({ list }: Props) => {
     return list.map((item: Item) => (
         <StyledCol key={item.id} xs={6} lg={4} xl={3}>
-            <Card
-                itemId={item.id}
-                title={item.name || 'Unknown name'}
-                uploader={item.uploader || 'Unknown uploader'}
-                image={item.imageUrls[0]}
-            />
+            <Card itemId={item.id} title={item.name || 'Unknown name'} city={item.city || 'Unknown city'} image={item.imageUrls[0]} />
         </StyledCol>
     ));
 };
