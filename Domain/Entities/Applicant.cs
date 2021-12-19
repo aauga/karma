@@ -9,5 +9,6 @@ namespace Domain.Entities
         public Guid ItemId { get; set; }
         public Item Item { get; set; }
         public string Reason { get; set; }
+        public bool IsSuspended { get; set; }
     }
 }
