@@ -7,7 +7,7 @@ import Details from './pages/Details';
 import Companies from './pages/Companies';
 import Coupons from './pages/Coupons';
 import AddListing from './pages/AddListing';
-import Loading from './components/loading';
+import Loading from './components/Loading';
 import Navbar from './components/Navbar';
 import NotFound from './components/common/NotFound';
 import ProtectedRoute from './auth/protected-route';
