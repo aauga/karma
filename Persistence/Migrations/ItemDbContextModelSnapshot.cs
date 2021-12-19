@@ -27,6 +27,9 @@ namespace Persistence.Migrations
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsSuspended")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
