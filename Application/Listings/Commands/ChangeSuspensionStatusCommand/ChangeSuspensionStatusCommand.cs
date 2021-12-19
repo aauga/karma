@@ -44,6 +44,16 @@ namespace Application.Listings.Commands.ChangeSuspensionStatusCommand
             {
                 throw new NotFoundException(nameof(Item), request.ItemId);
             }
+            
+            if (item.IsSuspended)
+            {
+                throw new ConflictException("Item is currently suspended.");
+            }
+
+            if (item.Redeemer != null)
+            {
+                throw new ConflictException("Item has been already redeemed.");
+            }
 
             if (item.Uploader != user.Username)
             {
