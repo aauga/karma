@@ -9,13 +9,13 @@ namespace Domain.Entities
 {
     public class CouponResponse
     {
-        public string CompanyName { get; set; }
+        public Guid CouponId { get; set; }
         public string CouponName { get; set; }
         public string Description { get; set; }
-        public string Website { get; set; }
         public int Price { get; set; }
+        public int Amount { get; set; }
+        public string CompanyName { get; set; }
         public string LogoUrl { get; set; }
-        public Guid CouponId { get; set; }
-
+        public DateTime Uploaded { get; set; }
     }
 }

@@ -17,5 +17,6 @@ namespace Domain.Entities
         public Guid CompanyId { get; set; }
         public string Description { get; set; }
         public int Price { get; set; }
+        public DateTime Uploaded { get; set; }
     }
 }

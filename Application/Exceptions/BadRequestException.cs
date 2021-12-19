@@ -2,14 +2,14 @@
 
 namespace Application.Exceptions
 {
-    public class NotEnoughCreditsException : Exception
+    public class BadRequestException : Exception
     {
-        public NotEnoughCreditsException()
+        public BadRequestException()
             : base()
         {
         }
 
-        public NotEnoughCreditsException(string message)
+        public BadRequestException(string message)
             : base(message)
         {
         }

@@ -18,7 +18,8 @@ namespace WebApi.Filters
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(ConflictException), HandleConflictException },
-                { typeof(UnknownException), HandleUnknownException }
+                { typeof(UnknownException), HandleUnknownException },
+                { typeof(BadRequestException), HandleBadRequestException }
             };
         }
 
@@ -123,6 +124,23 @@ namespace WebApi.Filters
                 context.Result = new ConflictObjectResult(details);
             }
             
+            context.ExceptionHandled = true;
+        }
+        
+        private void HandleBadRequestException(ExceptionContext context)
+        {
+            if (context.Exception is BadRequestException exception)
+            {
+                var details = new ProblemDetails
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Title = "Bad Request",
+                    Detail = exception.Message
+                };
+
+                context.Result = new BadRequestObjectResult(details);
+            }
+
             context.ExceptionHandled = true;
         }
     }

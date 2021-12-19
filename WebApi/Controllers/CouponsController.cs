@@ -1,34 +1,46 @@
 ﻿using Application.Coupons.Commands;
 using Application.Coupons.Queries;
 using Domain.Entities;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Coupons.Commands.RedeemCouponCommand;
 
 namespace WebApi.Controllers
 {
     public class CouponsController : BaseApiController
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CouponResponse>>> GetCoupons()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<object>> GetCoupons([FromRoute] Guid id, [FromQuery] uint page = 1, [FromQuery] uint itemsPerPage = 16)
         {
-            var Coupons = await Mediator.Send(new GetCoupons.Query());
-
-            return Ok(Coupons);
+            return Ok(await Mediator.Send(new GetCoupons.Query {CompanyId = id, Page = page, ItemsPerPage = itemsPerPage}));
         }
+        
+        [HttpGet("companies")]
+        public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
+        {
+            var companies = await Mediator.Send(new GetCompaniesQuery());
+
+            if (!companies.Any())
+            {
+                return NoContent();
+            }
+            
+            return Ok(companies);
+        }
+        
 
         [Authorize]
-        [HttpPost("{id}")]
-        public async Task<ActionResult<string>> BuyCoupon([FromRoute] Guid CouponId)
+        [HttpPost("redeem/{id}")]
+        public async Task<ActionResult<string>> Redeem([FromRoute] Guid id)
         {
             var user = await GetUser();
-            var code = await Mediator.Send(new BuyCoupon.Query {CouponId = CouponId , User = user });
+            var couponCode = await Mediator.Send(new RedeemCouponCommand {CouponId = id, UserId = user });
 
-            return Ok(code);
+            return Ok(couponCode);
         }
 
         [Authorize]

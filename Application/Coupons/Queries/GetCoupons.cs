@@ -14,11 +14,13 @@ namespace Application.Coupons.Queries
 {
     public class GetCoupons
     {
-        public class Query : IRequest<IEnumerable<CouponResponse>>
+        public class Query : IRequest<object>
         {
-
+            public Guid CompanyId { get; set; }
+            public uint Page { get; set; }
+            public uint ItemsPerPage { get; set; }
         }
-        public class Handler : IRequestHandler<Query, IEnumerable<CouponResponse>>
+        public class Handler : IRequestHandler<Query, object>
         {
             private readonly ItemDbContext _context;
             public Handler(ItemDbContext context)
@@ -26,9 +28,14 @@ namespace Application.Coupons.Queries
                 _context = context;
             }
 
-            public async Task<IEnumerable<CouponResponse>> Handle(Query request, CancellationToken cancellationToken)
+            public Task<object> Handle(Query request, CancellationToken cancellationToken)
             {
-                List<CouponResponse> coupons = await _context.Coupons
+                var coupons = _context.Coupons
+                    .Where(x => x.CompanyId == request.CompanyId &&
+                                _context.CouponCodes.Any(y => x.Id == y.CouponId))
+                    .OrderByDescending(x => x.Uploaded)
+                    .Skip((int) ((request.Page - 1) * request.ItemsPerPage))
+                    .Take((int) request.ItemsPerPage)
                     .Join(
                         _context.Companies,
                         coupon => coupon.CompanyId,
@@ -36,19 +43,24 @@ namespace Application.Coupons.Queries
                         (coupon, company) => new CouponResponse
                         {
                             CompanyName = company.Name,
-                            Website = company.Website,
                             LogoUrl = company.LogoUrl,
                             Description = coupon.Description,
                             Price = coupon.Price,
                             CouponName = coupon.Name,
-                            CouponId = coupon.Id
+                            CouponId = coupon.Id,
+                            Uploaded = coupon.Uploaded,
+                            Amount = _context.CouponCodes.Count(x => x.CouponId == coupon.Id)
                         }
-                    ).ToListAsync();
+                    );
+                
+                var totalItems = _context.Coupons.Count();
+                var totalPages = (int) Math.Ceiling((float) totalItems / request.ItemsPerPage);
+                
+                Object pagination = new
+                    {TotalPages = totalPages, request.Page, request.ItemsPerPage};
 
-                return coupons;
+                return Task.FromResult<object>(new {Pagination = pagination, Coupons = coupons});
             }
-
-            
         }
     }
 }
