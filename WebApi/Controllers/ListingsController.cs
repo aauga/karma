@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Common.Models;
 using Application.Coupons.Queries;
+using Application.Listings.Commands.ChangeSuspensionStatusCommand;
 using Application.Listings.Queries;
 using Application.Listings.Queries.GetActiveListingsQuery;
 using Application.Listings.Queries.GetApplicationsQuery;
@@ -44,6 +45,17 @@ namespace WebApi.Controllers
             }
             
             return Ok(applications);
+        }
+        
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ChangeSuspensionStatus([FromRoute] Guid id, [FromQuery] string username)
+        {
+            var user = await GetUser();
+            
+            await Mediator.Send(new ChangeSuspensionStatusCommand {ItemId = id, UserId = user, Applicant = username});
+
+            return NoContent();
         }
     }
 }
