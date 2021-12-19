@@ -51,7 +51,7 @@ namespace Application.Listings.Queries.GetApplicationsQuery
             foreach (var applicant in item.Applicants)
             {
                 var applicantData = _context.Users.First(x => x.AuthId == applicant.UserId);
-                list.Add(new ApplicationModel {Username = applicantData.Username, Reason = applicant.Reason, IsSuspended = false});
+                list.Add(new ApplicationModel {Username = applicantData.Username, Reason = applicant.Reason, IsSuspended = applicant.IsSuspended});
             }
 
             return list;
