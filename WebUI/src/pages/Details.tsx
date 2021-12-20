@@ -66,11 +66,6 @@ const Details = () => {
     const [userRes, setUserRes] = useState(userObj);
     const [randomItems, setRandomItems] = useState(randomItemsObj);
     const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-    const urls = [
-        'https://images.unsplash.com/photo-1639680957169-ebff920c7e23?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1430&q=80',
-        'https://images.unsplash.com/photo-1639674242533-e826a9992373?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-        'https://images.unsplash.com/photo-1639603708440-220c057fc9af?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyMnx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60'
-    ];
 
     const randomItemsReq = () => {
         axios
@@ -312,38 +307,25 @@ const Details = () => {
                             overflow: 'hidden'
                         }}
                     >
-                        {urls.map(url => (
-                            <Carousel.Item key={url}>
-                                <Image src={url} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                        {itemRes.response.imageUrls.map(url => (
+                            <Carousel.Item key={url} style={{ height: '450px' }}>
+                                <Image
+                                    src={url}
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        objectFit: 'cover',
+                                        position: 'absolute',
+                                        top: 0,
+                                        bottom: 0
+                                    }}
+                                />
                             </Carousel.Item>
                         ))}
                     </Carousel>
                 )}
             </div>
         );
-    };
-
-    const LoadedCarousel: Function = () => {
-        let list = [];
-        let data = urls;
-
-        for (let i = 0; i < data.length; i++) {
-            list.push(
-                <Carousel.Item key={data[i]} className={i == 0 ? 'active' : ''}>
-                    <img
-                        src={data[i]}
-                        style={{
-                            borderRadius: '4px',
-                            height: '100%',
-                            width: '100%',
-                            objectFit: 'cover'
-                        }}
-                    />
-                </Carousel.Item>
-            );
-        }
-
-        return list;
     };
 
     const Description = () => {
