@@ -1,10 +1,15 @@
+import { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { STATUS_CODES } from 'http';
-import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.svg';
+import axios from 'axios';
 import AuthenticationButton from './authentication-button';
+import { AiOutlinePlus, AiOutlineLogout, AiFillThunderbolt } from 'react-icons/ai';
+
+const serverUrl = process.env.REACT_APP_SERVER_URL;
+const userData = `${serverUrl}/api/user/metadata`;
 
 const StyledNavbar = styled(Navbar)`
     border: 0;
@@ -13,7 +18,7 @@ const StyledNavbar = styled(Navbar)`
 `;
 
 const StyledImage = styled.img`
-    border-radius: 50%;
+    border-radius: 4px;
     height: 32px;
     width: 32px;
 `;
@@ -66,9 +71,28 @@ const StyledLink = styled(Link)`
 `;
 
 const NavigationBar = () => {
-    const { user } = useAuth0();
-    const { isAuthenticated } = useAuth0();
-    // const { picture } = user;
+    const [points, setPoints] = useState(100);
+    const { user, logout, isAuthenticated } = useAuth0();
+
+    const userReq = async () => {
+        if (isAuthenticated) {
+            try {
+                const token = await getAccessTokenSilently();
+                const res = await axios.get(userData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                setPoints(res.data.points);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
+
+    userReq();
+
     return (
         <StyledNavbar expand='lg' variant='light'>
             <Container>
@@ -86,21 +110,46 @@ const NavigationBar = () => {
                             Coupons
                         </StyledLink>
                         {isAuthenticated && (
-                            <>
-                                <StyledLink to='/listings' className='nav-link'>
-                                    Listings
-                                </StyledLink>
-                                <StyledLink to='/addlisting' className='nav-link'>
-                                    Add Listing
-                                </StyledLink>
-                            </>
+                            <StyledLink to='/listings' className='nav-link'>
+                                Listings
+                            </StyledLink>
                         )}
                     </Nav>
                     <Nav id='nav-right'>
                         {isAuthenticated && (
-                            <Link to='/profile'>
-                                <StyledImage src={user.picture} />
-                            </Link>
+                            <div className='d-flex justify-content-end'>
+                                <div
+                                    className='nav-link'
+                                    style={{
+                                        backgroundColor: '#885df1',
+                                        borderRadius: '4px',
+                                        color: 'white',
+                                        fontFamily: 'Raleway',
+                                        fontSize: '12px',
+                                        fontWeight: 700,
+                                        minWidth: '50px',
+                                        marginRight: '8px'
+                                    }}
+                                >
+                                    <AiFillThunderbolt size={14} color={'#fff'} style={{ marginRight: '.1rem' }} /> {points}
+                                </div>
+                                <StyledLink to='/addlisting' className='nav-link'>
+                                    <AiOutlinePlus color={'rgba(0,0,0,.55)'} size={18} />
+                                </StyledLink>
+                                <StyledLink
+                                    className='nav-link'
+                                    onClick={() =>
+                                        logout({
+                                            returnTo: window.location.origin
+                                        })
+                                    }
+                                >
+                                    <AiOutlineLogout color={'rgba(0,0,0,.55)'} size={18} />
+                                </StyledLink>
+                                <Link to='/profile'>
+                                    <StyledImage src={user.picture} />
+                                </Link>
+                            </div>
                         )}
 
                         <AuthenticationButton />
