@@ -25,11 +25,11 @@ namespace Services
                 .ThenInclude(x => x.User)
                 .FirstOrDefaultAsync(x => x.Id == itemId);
 
-            if (item != null)
+            if (item != null || item.Redeemer != null)
             {
-                var applicants = item.Applicants;
+                var applicants = item.Applicants.Where(x => !x.IsSuspended).ToList();
 
-                if (applicants == null || applicants.Count == 0)
+                if (!applicants.Any())
                 {
                     ExtendOrSuspend(item);
                 }
@@ -55,7 +55,7 @@ namespace Services
             }
         }
 
-        public void PickWinner(Item item, ICollection<Applicant> applicants)
+        public void PickWinner(Item item, List<Applicant> applicants)
         {
             var rand = new Random();
             var winnerIndex = rand.Next(0, applicants.Count);
