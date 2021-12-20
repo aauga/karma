@@ -381,7 +381,8 @@ const Details = () => {
                     More items like this
                 </h3>
                 <Row>
-                    {randomItems.statusCode == 0 ? <ListingPlaceholders amount={4} /> : <LoadedListings list={randomItems.response} />}
+                    {randomItems.statusCode == 0 && <ListingPlaceholders amount={4} />}
+                    {randomItems.statusCode != 0 && randomItems.response.length != 0 && <LoadedListings list={randomItems.response} />}
                 </Row>
             </div>
         </Container>
