@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Exceptions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Listings.Queries.GetActiveListingsQuery
@@ -32,7 +33,22 @@ namespace Application.Listings.Queries.GetActiveListingsQuery
                 throw new NotFoundException(nameof(User), request.UserId);
             }
             
-            return _context.Items.Where(item => !item.IsSuspended && item.Uploader == user.Username);
+            var items = await _context.Items.Where(item => !item.IsSuspended && item.Uploader == user.Username).ToListAsync();
+
+            foreach (var item in items)
+            {
+                var urls = new List<string>();
+                var result = _context.Images.Where(s => s.ListingId == item.Id);
+                    
+                foreach (var image in result)
+                {
+                    urls.Add(image.ImageUrl);
+                }
+                    
+                item.ImageUrls = urls;
+            }
+            
+            return items;
         }
     }
 }

@@ -30,8 +30,18 @@ namespace Application.Items.Queries
 
                 if (item == null)
                 {
-                    throw new NotFoundException($"Item {request.Id} does not exist");
+                    throw new NotFoundException(nameof(Item), request.Id);
                 }
+                
+                var urls = new List<string>();
+                var result = _context.Images.Where(s => s.ListingId == item.Id);
+                
+                foreach (var image in result)
+                {
+                    urls.Add(image.ImageUrl);
+                }
+                                    
+                item.ImageUrls = urls;
 
                 return item;
             }
