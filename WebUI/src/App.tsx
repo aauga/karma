@@ -7,6 +7,8 @@ import Details from './pages/Details';
 import Companies from './pages/Companies';
 import Coupons from './pages/Coupons';
 import AddListing from './pages/AddListing';
+import Listings from './pages/Listings';
+import SelectedListing from './pages/SelectedListing';
 import Loading from './components/Loading';
 import Navbar from './components/Navbar';
 import NotFound from './components/common/NotFound';
@@ -32,6 +34,8 @@ const App = () => {
                 <Route path='/coupons/:id' exact component={Coupons} />
                 <ProtectedRoute path='/addlisting' component={AddListing} />
                 <ProtectedRoute path='/profile' component={Profile} />
+                <ProtectedRoute path='/listings/:id' component={SelectedListing} />
+                <ProtectedRoute path='/listings/' component={Listings} />
                 <Route component={NotFound} />
             </Switch>
         </div>

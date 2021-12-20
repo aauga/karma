@@ -47,7 +47,7 @@ const CouponCompanies = () => {
 
     return (
         <>
-            <h2>Companies</h2>
+            <h2 className='mt-3'>Companies</h2>
             <h3 style={{ fontFamily: 'Roboto', fontSize: '16px', fontWeight: 400, color: '#6c757d' }}>
                 Select a company from which you want to redeem a coupon code
             </h3>

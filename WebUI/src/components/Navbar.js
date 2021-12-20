@@ -14,21 +14,8 @@ const StyledNavbar = styled(Navbar)`
 
 const StyledImage = styled.img`
     border-radius: 50%;
-    max-height: 50px;
-    max-width: 50px;
-    border: 5px solid rgba(0, 0, 0, 0.04);
-    display: inline-block;
-    vertical-align: middle;
-    transform: translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    transition-duration: 0.3s;
-    transition-property: transform;
-    margin-right: 1rem;
-    &:hover {
-        transform: scale(1.1);
-    }
+    height: 32px;
+    width: 32px;
 `;
 
 const StyledToggle = styled(Navbar.Toggle)`
@@ -99,9 +86,14 @@ const NavigationBar = () => {
                             Coupons
                         </StyledLink>
                         {isAuthenticated && (
-                            <StyledLink to='/addlisting' className='nav-link'>
-                                Add Listing
-                            </StyledLink>
+                            <>
+                                <StyledLink to='/listings' className='nav-link'>
+                                    Listings
+                                </StyledLink>
+                                <StyledLink to='/addlisting' className='nav-link'>
+                                    Add Listing
+                                </StyledLink>
+                            </>
                         )}
                     </Nav>
                     <Nav id='nav-right'>
